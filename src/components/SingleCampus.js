@@ -8,7 +8,7 @@ function SingleCampus() {
   const dispatch = useDispatch();
 
   const campus = useSelector(
-    (state) => state.fetchSingleCampusSlice.singleCampus
+    (state) => state.persistedSingleCampus.singleCampus
   );
 
   useEffect(() => {

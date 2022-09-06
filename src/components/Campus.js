@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { deleteCampusThunk } from "../redux/reducers/delete-campus";
+import CampusForm from "./CampusForm";
 
 function Campus() {
-  const campus = useSelector((state) => state.fetchCampusSlice.campus);
+  const campus = useSelector((state) => state.persistedCampus.campus);
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -13,9 +16,13 @@ function Campus() {
           return (
             <div key={campi.id}>
               <Link to={`/campus/${campi.id}`}>{campi.name}</Link>
+              <button onClick={() => dispatch(deleteCampusThunk(campi.id))}>
+                X
+              </button>
             </div>
           );
         })}
+      <CampusForm />
     </div>
   );
 }

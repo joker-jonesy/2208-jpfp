@@ -9,15 +9,15 @@ const Campus = db.define("Campus", {
       notEmpty: true,
     },
   },
-  description: {
-    type: Sequelize.TEXT,
-  },
   address: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: true,
     },
+  },
+  description: {
+    type: Sequelize.TEXT,
   },
   imageURL: {
     type: Sequelize.BLOB,
