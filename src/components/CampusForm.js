@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createCampusThunk } from "../redux/reducers/create-campus";
+import { useParams } from "react-router-dom";
+import {
+  useAddCampusMutation,
+  useUpdateCampusMutation,
+} from "../redux/api/apiSlice";
 
-function CampusForm() {
+function CampusForm(props) {
+  const [addCampus] = useAddCampusMutation();
+  const [editCampus] = useUpdateCampusMutation();
+
+  const params = useParams();
+
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -10,16 +18,18 @@ function CampusForm() {
     img: "",
   });
 
-  const dispatch = useDispatch();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createCampusThunk(formData));
+    let payload = {
+      id: params.id,
+      data: formData,
+    };
+    props.props ? await addCampus(formData) : await editCampus(payload);
   };
 
   return (
     <div>
-      CampusForm
+      {props.props ? "Add Campus" : "Edit Campus"}
       <form
         onSubmit={(e) => {
           handleSubmit(e);

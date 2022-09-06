@@ -1,35 +1,37 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchSingleStudentThunk } from "../redux/reducers/singleStudent-slice";
+import { useGetSingleStudentQuery } from "../redux/api/apiSlice";
+import StudentForm from "./StudentForm";
 
 function SingleStudent() {
+  const [isTrue, setIsTrue] = useState(false);
   const params = useParams();
-  const dispatch = useDispatch();
-
-  const student = useSelector(
-    (state) => state.persistedSingleStudent.singleStudent
-  );
-  console.log(student);
-
-  useEffect(() => {
-    dispatch(fetchSingleStudentThunk(params.id));
-  }, [dispatch]);
+  const { data, error, isLoading, isFetching, isSuccess } =
+    useGetSingleStudentQuery(params.id);
 
   return (
     <div>
-      <div>
-        {student.firstName} {student.lastName}'s Page
-      </div>
-      <div>email : {student.email}</div>
-      <div>gpa : {student.gpa}</div>
-      <div>image goes here</div>
-      <div>
-        School :{" "}
-        <Link to={`/campus/${student.CampusId}`}>
-          {student.Campus && <h4>{student.Campus.name}</h4>}
-        </Link>
-      </div>
+      {isLoading && <h2>Campus is being served</h2>}
+      {isFetching && <h2>Fetching campus, please wait</h2>}
+      {error && <h2>Oops! There was an error Dx</h2>}
+      {isSuccess && (
+        <div>
+          {" "}
+          <div>
+            {data.firstName} {data.lastName}'s Page
+          </div>
+          <div>email : {data.email}</div>
+          <div>gpa : {data.gpa}</div>
+          <div>image goes here</div>
+          <div>
+            School :{" "}
+            <Link to={`/campus/${data.CampusId}`}>
+              {data.Campus && <h4>{data.Campus.name}</h4>}
+            </Link>
+          </div>
+        </div>
+      )}
+      <StudentForm props={isTrue} />
     </div>
   );
 }

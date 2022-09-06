@@ -36,6 +36,20 @@ router.post("/student", async (req, res) => {
   }
 });
 
+router.put("/student/:id", async (req, res, next) => {
+  try {
+    let student = await Student.findByPk(req.params.id);
+    if (student) {
+      student.update(req.body);
+      res.send(student);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 router.delete("/student/:id", async (req, res) => {
   try {
     if (isNaN(req.params.id)) res.sendStatus(400);

@@ -1,6 +1,2811 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.cjs.development.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.cjs.development.js ***!
+  \*******************************************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = function (obj, key, value) { return key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value: value }) : obj[key] = value; };
+var __spreadValues = function (a, b) {
+    for (var prop in b || (b = {}))
+        if (__hasOwnProp.call(b, prop))
+            __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+        for (var _i = 0, _c = __getOwnPropSymbols(b); _i < _c.length; _i++) {
+            var prop = _c[_i];
+            if (__propIsEnum.call(b, prop))
+                __defNormalProp(a, prop, b[prop]);
+        }
+    return a;
+};
+var __spreadProps = function (a, b) { return __defProps(a, __getOwnPropDescs(b)); };
+var __markAsModule = function (target) { return __defProp(target, "__esModule", { value: true }); };
+var __export = function (target, all) {
+    for (var name in all)
+        __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __reExport = function (target, module2, desc) {
+    if (module2 && typeof module2 === "object" || typeof module2 === "function") {
+        var _loop_1 = function (key) {
+            if (!__hasOwnProp.call(target, key) && key !== "default")
+                __defProp(target, key, { get: function () { return module2[key]; }, enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
+        };
+        for (var _i = 0, _c = __getOwnPropNames(module2); _i < _c.length; _i++) {
+            var key = _c[_i];
+            _loop_1(key);
+        }
+    }
+    return target;
+};
+var __toModule = function (module2) {
+    return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: function () { return module2.default; }, enumerable: true } : { value: module2, enumerable: true })), module2);
+};
+// src/query/react/index.ts
+__markAsModule(exports);
+__export(exports, {
+    ApiProvider: function () { return ApiProvider; },
+    createApi: function () { return createApi; },
+    reactHooksModule: function () { return reactHooksModule; }
+});
+var import_query3 = __toModule(__webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js"));
+// src/query/react/buildHooks.ts
+var import_toolkit = __toModule(__webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js"));
+var import_react3 = __toModule(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var import_query = __toModule(__webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js"));
+var import_react_redux2 = __toModule(__webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js"));
+// src/query/react/useSerializedStableValue.ts
+var import_react = __toModule(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function useStableQueryArgs(queryArgs, serialize, endpointDefinition, endpointName) {
+    var incoming = (0, import_react.useMemo)(function () { return ({
+        queryArgs: queryArgs,
+        serialized: typeof queryArgs == "object" ? serialize({ queryArgs: queryArgs, endpointDefinition: endpointDefinition, endpointName: endpointName }) : queryArgs
+    }); }, [queryArgs, serialize, endpointDefinition, endpointName]);
+    var cache = (0, import_react.useRef)(incoming);
+    (0, import_react.useEffect)(function () {
+        if (cache.current.serialized !== incoming.serialized) {
+            cache.current = incoming;
+        }
+    }, [incoming]);
+    return cache.current.serialized === incoming.serialized ? cache.current.queryArgs : queryArgs;
+}
+// src/query/react/constants.ts
+var UNINITIALIZED_VALUE = Symbol();
+// src/query/react/useShallowStableValue.ts
+var import_react2 = __toModule(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var import_react_redux = __toModule(__webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js"));
+function useShallowStableValue(value) {
+    var cache = (0, import_react2.useRef)(value);
+    (0, import_react2.useEffect)(function () {
+        if (!(0, import_react_redux.shallowEqual)(cache.current, value)) {
+            cache.current = value;
+        }
+    }, [value]);
+    return (0, import_react_redux.shallowEqual)(cache.current, value) ? cache.current : value;
+}
+// src/query/react/buildHooks.ts
+var useIsomorphicLayoutEffect = typeof window !== "undefined" && window.document && window.document.createElement ? import_react3.useLayoutEffect : import_react3.useEffect;
+var defaultQueryStateSelector = function (x) { return x; };
+var defaultMutationStateSelector = function (x) { return x; };
+var noPendingQueryStateSelector = function (selected) {
+    if (selected.isUninitialized) {
+        return __spreadProps(__spreadValues({}, selected), {
+            isUninitialized: false,
+            isFetching: true,
+            isLoading: selected.data !== void 0 ? false : true,
+            status: import_query.QueryStatus.pending
+        });
+    }
+    return selected;
+};
+function buildHooks(_c) {
+    var api = _c.api, _d = _c.moduleOptions, batch = _d.batch, useDispatch = _d.useDispatch, useSelector = _d.useSelector, useStore = _d.useStore, unstable__sideEffectsInRender = _d.unstable__sideEffectsInRender, serializeQueryArgs = _c.serializeQueryArgs, context = _c.context;
+    var usePossiblyImmediateEffect = unstable__sideEffectsInRender ? function (cb) { return cb(); } : import_react3.useEffect;
+    return { buildQueryHooks: buildQueryHooks, buildMutationHook: buildMutationHook, usePrefetch: usePrefetch };
+    function queryStatePreSelector(currentState, lastResult, queryArgs) {
+        if ((lastResult == null ? void 0 : lastResult.endpointName) && currentState.isUninitialized) {
+            var endpointName = lastResult.endpointName;
+            var endpointDefinition = context.endpointDefinitions[endpointName];
+            if (serializeQueryArgs({
+                queryArgs: lastResult.originalArgs,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            }) === serializeQueryArgs({
+                queryArgs: queryArgs,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            }))
+                lastResult = void 0;
+        }
+        var data = currentState.isSuccess ? currentState.data : lastResult == null ? void 0 : lastResult.data;
+        if (data === void 0)
+            data = currentState.data;
+        var hasData = data !== void 0;
+        var isFetching = currentState.isLoading;
+        var isLoading = !hasData && isFetching;
+        var isSuccess = currentState.isSuccess || isFetching && hasData;
+        return __spreadProps(__spreadValues({}, currentState), {
+            data: data,
+            currentData: currentState.data,
+            isFetching: isFetching,
+            isLoading: isLoading,
+            isSuccess: isSuccess
+        });
+    }
+    function usePrefetch(endpointName, defaultOptions) {
+        var dispatch = useDispatch();
+        var stableDefaultOptions = useShallowStableValue(defaultOptions);
+        return (0, import_react3.useCallback)(function (arg, options) { return dispatch(api.util.prefetch(endpointName, arg, __spreadValues(__spreadValues({}, stableDefaultOptions), options))); }, [endpointName, dispatch, stableDefaultOptions]);
+    }
+    function buildQueryHooks(name) {
+        var useQuerySubscription = function (arg, _c) {
+            var _d = _c === void 0 ? {} : _c, refetchOnReconnect = _d.refetchOnReconnect, refetchOnFocus = _d.refetchOnFocus, refetchOnMountOrArgChange = _d.refetchOnMountOrArgChange, _e = _d.skip, skip = _e === void 0 ? false : _e, _f = _d.pollingInterval, pollingInterval = _f === void 0 ? 0 : _f;
+            var initiate = api.endpoints[name].initiate;
+            var dispatch = useDispatch();
+            var stableArg = useStableQueryArgs(skip ? import_query.skipToken : arg, serializeQueryArgs, context.endpointDefinitions[name], name);
+            var stableSubscriptionOptions = useShallowStableValue({
+                refetchOnReconnect: refetchOnReconnect,
+                refetchOnFocus: refetchOnFocus,
+                pollingInterval: pollingInterval
+            });
+            var promiseRef = (0, import_react3.useRef)();
+            var _g = promiseRef.current || {}, queryCacheKey = _g.queryCacheKey, requestId = _g.requestId;
+            var subscriptionRemoved = useSelector(function (state) {
+                var _a;
+                return !!queryCacheKey && !!requestId && !((_a = state[api.reducerPath].subscriptions[queryCacheKey]) == null ? void 0 : _a[requestId]);
+            });
+            usePossiblyImmediateEffect(function () {
+                promiseRef.current = void 0;
+            }, [subscriptionRemoved]);
+            usePossiblyImmediateEffect(function () {
+                var _a;
+                var lastPromise = promiseRef.current;
+                if (typeof process !== "undefined" && false) {}
+                if (stableArg === import_query.skipToken) {
+                    lastPromise == null ? void 0 : lastPromise.unsubscribe();
+                    promiseRef.current = void 0;
+                    return;
+                }
+                var lastSubscriptionOptions = (_a = promiseRef.current) == null ? void 0 : _a.subscriptionOptions;
+                if (!lastPromise || lastPromise.arg !== stableArg) {
+                    lastPromise == null ? void 0 : lastPromise.unsubscribe();
+                    var promise = dispatch(initiate(stableArg, {
+                        subscriptionOptions: stableSubscriptionOptions,
+                        forceRefetch: refetchOnMountOrArgChange
+                    }));
+                    promiseRef.current = promise;
+                }
+                else if (stableSubscriptionOptions !== lastSubscriptionOptions) {
+                    lastPromise.updateSubscriptionOptions(stableSubscriptionOptions);
+                }
+            }, [
+                dispatch,
+                initiate,
+                refetchOnMountOrArgChange,
+                stableArg,
+                stableSubscriptionOptions,
+                subscriptionRemoved
+            ]);
+            (0, import_react3.useEffect)(function () {
+                return function () {
+                    var _a;
+                    (_a = promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                    promiseRef.current = void 0;
+                };
+            }, []);
+            return (0, import_react3.useMemo)(function () { return ({
+                refetch: function () {
+                    var _a;
+                    return void ((_a = promiseRef.current) == null ? void 0 : _a.refetch());
+                }
+            }); }, []);
+        };
+        var useLazyQuerySubscription = function (_c) {
+            var _d = _c === void 0 ? {} : _c, refetchOnReconnect = _d.refetchOnReconnect, refetchOnFocus = _d.refetchOnFocus, _e = _d.pollingInterval, pollingInterval = _e === void 0 ? 0 : _e;
+            var initiate = api.endpoints[name].initiate;
+            var dispatch = useDispatch();
+            var _f = (0, import_react3.useState)(UNINITIALIZED_VALUE), arg = _f[0], setArg = _f[1];
+            var promiseRef = (0, import_react3.useRef)();
+            var stableSubscriptionOptions = useShallowStableValue({
+                refetchOnReconnect: refetchOnReconnect,
+                refetchOnFocus: refetchOnFocus,
+                pollingInterval: pollingInterval
+            });
+            usePossiblyImmediateEffect(function () {
+                var _a, _b;
+                var lastSubscriptionOptions = (_a = promiseRef.current) == null ? void 0 : _a.subscriptionOptions;
+                if (stableSubscriptionOptions !== lastSubscriptionOptions) {
+                    (_b = promiseRef.current) == null ? void 0 : _b.updateSubscriptionOptions(stableSubscriptionOptions);
+                }
+            }, [stableSubscriptionOptions]);
+            var subscriptionOptionsRef = (0, import_react3.useRef)(stableSubscriptionOptions);
+            usePossiblyImmediateEffect(function () {
+                subscriptionOptionsRef.current = stableSubscriptionOptions;
+            }, [stableSubscriptionOptions]);
+            var trigger = (0, import_react3.useCallback)(function (arg2, preferCacheValue) {
+                if (preferCacheValue === void 0) { preferCacheValue = false; }
+                var promise;
+                batch(function () {
+                    var _a;
+                    (_a = promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                    promiseRef.current = promise = dispatch(initiate(arg2, {
+                        subscriptionOptions: subscriptionOptionsRef.current,
+                        forceRefetch: !preferCacheValue
+                    }));
+                    setArg(arg2);
+                });
+                return promise;
+            }, [dispatch, initiate]);
+            (0, import_react3.useEffect)(function () {
+                return function () {
+                    var _a;
+                    (_a = promiseRef == null ? void 0 : promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                };
+            }, []);
+            (0, import_react3.useEffect)(function () {
+                if (arg !== UNINITIALIZED_VALUE && !promiseRef.current) {
+                    trigger(arg, true);
+                }
+            }, [arg, trigger]);
+            return (0, import_react3.useMemo)(function () { return [trigger, arg]; }, [trigger, arg]);
+        };
+        var useQueryState = function (arg, _c) {
+            var _d = _c === void 0 ? {} : _c, _e = _d.skip, skip = _e === void 0 ? false : _e, _f = _d.selectFromResult, selectFromResult = _f === void 0 ? defaultQueryStateSelector : _f;
+            var select = api.endpoints[name].select;
+            var stableArg = useStableQueryArgs(skip ? import_query.skipToken : arg, serializeQueryArgs, context.endpointDefinitions[name], name);
+            var lastValue = (0, import_react3.useRef)();
+            var selectDefaultResult = (0, import_react3.useMemo)(function () { return (0, import_toolkit.createSelector)([
+                select(stableArg),
+                function (_, lastResult) { return lastResult; },
+                function (_) { return stableArg; }
+            ], queryStatePreSelector); }, [select, stableArg]);
+            var querySelector = (0, import_react3.useMemo)(function () { return (0, import_toolkit.createSelector)([selectDefaultResult], selectFromResult); }, [selectDefaultResult, selectFromResult]);
+            var currentState = useSelector(function (state) { return querySelector(state, lastValue.current); }, import_react_redux2.shallowEqual);
+            var store = useStore();
+            var newLastValue = selectDefaultResult(store.getState(), lastValue.current);
+            useIsomorphicLayoutEffect(function () {
+                lastValue.current = newLastValue;
+            }, [newLastValue]);
+            return currentState;
+        };
+        return {
+            useQueryState: useQueryState,
+            useQuerySubscription: useQuerySubscription,
+            useLazyQuerySubscription: useLazyQuerySubscription,
+            useLazyQuery: function (options) {
+                var _c = useLazyQuerySubscription(options), trigger = _c[0], arg = _c[1];
+                var queryStateResults = useQueryState(arg, __spreadProps(__spreadValues({}, options), {
+                    skip: arg === UNINITIALIZED_VALUE
+                }));
+                var info = (0, import_react3.useMemo)(function () { return ({ lastArg: arg }); }, [arg]);
+                return (0, import_react3.useMemo)(function () { return [trigger, queryStateResults, info]; }, [trigger, queryStateResults, info]);
+            },
+            useQuery: function (arg, options) {
+                var querySubscriptionResults = useQuerySubscription(arg, options);
+                var queryStateResults = useQueryState(arg, __spreadValues({
+                    selectFromResult: arg === import_query.skipToken || (options == null ? void 0 : options.skip) ? void 0 : noPendingQueryStateSelector
+                }, options));
+                var data = queryStateResults.data, status = queryStateResults.status, isLoading = queryStateResults.isLoading, isSuccess = queryStateResults.isSuccess, isError = queryStateResults.isError, error = queryStateResults.error;
+                (0, import_react3.useDebugValue)({ data: data, status: status, isLoading: isLoading, isSuccess: isSuccess, isError: isError, error: error });
+                return (0, import_react3.useMemo)(function () { return __spreadValues(__spreadValues({}, queryStateResults), querySubscriptionResults); }, [queryStateResults, querySubscriptionResults]);
+            }
+        };
+    }
+    function buildMutationHook(name) {
+        return function (_c) {
+            var _d = _c === void 0 ? {} : _c, _e = _d.selectFromResult, selectFromResult = _e === void 0 ? defaultMutationStateSelector : _e, fixedCacheKey = _d.fixedCacheKey;
+            var _f = api.endpoints[name], select = _f.select, initiate = _f.initiate;
+            var dispatch = useDispatch();
+            var _g = (0, import_react3.useState)(), promise = _g[0], setPromise = _g[1];
+            (0, import_react3.useEffect)(function () { return function () {
+                if (!(promise == null ? void 0 : promise.arg.fixedCacheKey)) {
+                    promise == null ? void 0 : promise.reset();
+                }
+            }; }, [promise]);
+            var triggerMutation = (0, import_react3.useCallback)(function (arg) {
+                var promise2 = dispatch(initiate(arg, { fixedCacheKey: fixedCacheKey }));
+                setPromise(promise2);
+                return promise2;
+            }, [dispatch, initiate, fixedCacheKey]);
+            var requestId = (promise || {}).requestId;
+            var mutationSelector = (0, import_react3.useMemo)(function () { return (0, import_toolkit.createSelector)([select({ fixedCacheKey: fixedCacheKey, requestId: promise == null ? void 0 : promise.requestId })], selectFromResult); }, [select, promise, selectFromResult, fixedCacheKey]);
+            var currentState = useSelector(mutationSelector, import_react_redux2.shallowEqual);
+            var originalArgs = fixedCacheKey == null ? promise == null ? void 0 : promise.arg.originalArgs : void 0;
+            var reset = (0, import_react3.useCallback)(function () {
+                batch(function () {
+                    if (promise) {
+                        setPromise(void 0);
+                    }
+                    if (fixedCacheKey) {
+                        dispatch(api.internalActions.removeMutationResult({
+                            requestId: requestId,
+                            fixedCacheKey: fixedCacheKey
+                        }));
+                    }
+                });
+            }, [dispatch, fixedCacheKey, promise, requestId]);
+            var endpointName = currentState.endpointName, data = currentState.data, status = currentState.status, isLoading = currentState.isLoading, isSuccess = currentState.isSuccess, isError = currentState.isError, error = currentState.error;
+            (0, import_react3.useDebugValue)({ endpointName: endpointName, data: data, status: status, isLoading: isLoading, isSuccess: isSuccess, isError: isError, error: error });
+            var finalState = (0, import_react3.useMemo)(function () { return __spreadProps(__spreadValues({}, currentState), { originalArgs: originalArgs, reset: reset }); }, [currentState, originalArgs, reset]);
+            return (0, import_react3.useMemo)(function () { return [triggerMutation, finalState]; }, [triggerMutation, finalState]);
+        };
+    }
+}
+// src/query/endpointDefinitions.ts
+var DefinitionType;
+(function (DefinitionType2) {
+    DefinitionType2["query"] = "query";
+    DefinitionType2["mutation"] = "mutation";
+})(DefinitionType || (DefinitionType = {}));
+function isQueryDefinition(e) {
+    return e.type === DefinitionType.query;
+}
+function isMutationDefinition(e) {
+    return e.type === DefinitionType.mutation;
+}
+// src/query/utils/capitalize.ts
+function capitalize(str) {
+    return str.replace(str[0], str[0].toUpperCase());
+}
+// src/query/tsHelpers.ts
+function safeAssign(target) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    Object.assign.apply(Object, __spreadArray([target], args));
+}
+// src/query/react/module.ts
+var import_react_redux3 = __toModule(__webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js"));
+var reactHooksModuleName = /* @__PURE__ */ Symbol();
+var reactHooksModule = function (_c) {
+    var _d = _c === void 0 ? {} : _c, _e = _d.batch, batch = _e === void 0 ? import_react_redux3.batch : _e, _f = _d.useDispatch, useDispatch = _f === void 0 ? import_react_redux3.useDispatch : _f, _g = _d.useSelector, useSelector = _g === void 0 ? import_react_redux3.useSelector : _g, _h = _d.useStore, useStore = _h === void 0 ? import_react_redux3.useStore : _h, _j = _d.unstable__sideEffectsInRender, unstable__sideEffectsInRender = _j === void 0 ? false : _j;
+    return ({
+        name: reactHooksModuleName,
+        init: function (api, _c, context) {
+            var serializeQueryArgs = _c.serializeQueryArgs;
+            var anyApi = api;
+            var _d = buildHooks({
+                api: api,
+                moduleOptions: {
+                    batch: batch,
+                    useDispatch: useDispatch,
+                    useSelector: useSelector,
+                    useStore: useStore,
+                    unstable__sideEffectsInRender: unstable__sideEffectsInRender
+                },
+                serializeQueryArgs: serializeQueryArgs,
+                context: context
+            }), buildQueryHooks = _d.buildQueryHooks, buildMutationHook = _d.buildMutationHook, usePrefetch = _d.usePrefetch;
+            safeAssign(anyApi, { usePrefetch: usePrefetch });
+            safeAssign(context, { batch: batch });
+            return {
+                injectEndpoint: function (endpointName, definition) {
+                    if (isQueryDefinition(definition)) {
+                        var _c = buildQueryHooks(endpointName), useQuery = _c.useQuery, useLazyQuery = _c.useLazyQuery, useLazyQuerySubscription = _c.useLazyQuerySubscription, useQueryState = _c.useQueryState, useQuerySubscription = _c.useQuerySubscription;
+                        safeAssign(anyApi.endpoints[endpointName], {
+                            useQuery: useQuery,
+                            useLazyQuery: useLazyQuery,
+                            useLazyQuerySubscription: useLazyQuerySubscription,
+                            useQueryState: useQueryState,
+                            useQuerySubscription: useQuerySubscription
+                        });
+                        api["use" + capitalize(endpointName) + "Query"] = useQuery;
+                        api["useLazy" + capitalize(endpointName) + "Query"] = useLazyQuery;
+                    }
+                    else if (isMutationDefinition(definition)) {
+                        var useMutation = buildMutationHook(endpointName);
+                        safeAssign(anyApi.endpoints[endpointName], {
+                            useMutation: useMutation
+                        });
+                        api["use" + capitalize(endpointName) + "Mutation"] = useMutation;
+                    }
+                }
+            };
+        }
+    });
+};
+// src/query/react/index.ts
+__reExport(exports, __toModule(__webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js")));
+// src/query/react/ApiProvider.tsx
+var import_toolkit2 = __toModule(__webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js"));
+var import_react4 = __toModule(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var import_react5 = __toModule(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var import_react_redux4 = __toModule(__webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js"));
+var import_query2 = __toModule(__webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js"));
+function ApiProvider(props) {
+    var store = import_react5.default.useState(function () {
+        var _c;
+        return (0, import_toolkit2.configureStore)({
+            reducer: (_c = {},
+                _c[props.api.reducerPath] = props.api.reducer,
+                _c),
+            middleware: function (gDM) { return gDM().concat(props.api.middleware); }
+        });
+    })[0];
+    (0, import_react4.useEffect)(function () { return props.setupListeners === false ? void 0 : (0, import_query2.setupListeners)(store.dispatch, props.setupListeners); }, [props.setupListeners]);
+    return /* @__PURE__ */ import_react5.default.createElement(import_react_redux4.Provider, {
+        store: store,
+        context: props.context
+    }, props.children);
+}
+// src/query/react/index.ts
+var createApi = /* @__PURE__ */ (0, import_query3.buildCreateApi)((0, import_query3.coreModule)(), reactHooksModule());
+//# sourceMappingURL=rtk-query-react.cjs.development.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.esm.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.esm.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ApiProvider": () => (/* binding */ ApiProvider),
+/* harmony export */   "QueryStatus": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.QueryStatus),
+/* harmony export */   "buildCreateApi": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.buildCreateApi),
+/* harmony export */   "copyWithStructuralSharing": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.copyWithStructuralSharing),
+/* harmony export */   "coreModule": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.coreModule),
+/* harmony export */   "createApi": () => (/* binding */ createApi),
+/* harmony export */   "fakeBaseQuery": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.fakeBaseQuery),
+/* harmony export */   "fetchBaseQuery": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.fetchBaseQuery),
+/* harmony export */   "reactHooksModule": () => (/* binding */ reactHooksModule),
+/* harmony export */   "retry": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.retry),
+/* harmony export */   "setupListeners": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.setupListeners),
+/* harmony export */   "skipSelector": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipSelector),
+/* harmony export */   "skipToken": () => (/* reexport safe */ _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipToken)
+/* harmony export */ });
+/* harmony import */ var _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/reselect/es/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
+var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = function (obj, key, value) { return key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value: value }) : obj[key] = value; };
+var __spreadValues = function (a, b) {
+    for (var prop in b || (b = {}))
+        if (__hasOwnProp.call(b, prop))
+            __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+        for (var _i = 0, _c = __getOwnPropSymbols(b); _i < _c.length; _i++) {
+            var prop = _c[_i];
+            if (__propIsEnum.call(b, prop))
+                __defNormalProp(a, prop, b[prop]);
+        }
+    return a;
+};
+var __spreadProps = function (a, b) { return __defProps(a, __getOwnPropDescs(b)); };
+// src/query/react/index.ts
+
+// src/query/react/buildHooks.ts
+
+
+
+
+// src/query/react/useSerializedStableValue.ts
+
+function useStableQueryArgs(queryArgs, serialize, endpointDefinition, endpointName) {
+    var incoming = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return ({
+        queryArgs: queryArgs,
+        serialized: typeof queryArgs == "object" ? serialize({ queryArgs: queryArgs, endpointDefinition: endpointDefinition, endpointName: endpointName }) : queryArgs
+    }); }, [queryArgs, serialize, endpointDefinition, endpointName]);
+    var cache = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(incoming);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+        if (cache.current.serialized !== incoming.serialized) {
+            cache.current = incoming;
+        }
+    }, [incoming]);
+    return cache.current.serialized === incoming.serialized ? cache.current.queryArgs : queryArgs;
+}
+// src/query/react/constants.ts
+var UNINITIALIZED_VALUE = Symbol();
+// src/query/react/useShallowStableValue.ts
+
+
+function useShallowStableValue(value) {
+    var cache = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(value);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+        if (!(0,react_redux__WEBPACK_IMPORTED_MODULE_1__.shallowEqual)(cache.current, value)) {
+            cache.current = value;
+        }
+    }, [value]);
+    return (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.shallowEqual)(cache.current, value) ? cache.current : value;
+}
+// src/query/react/buildHooks.ts
+var useIsomorphicLayoutEffect = typeof window !== "undefined" && window.document && window.document.createElement ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+var defaultQueryStateSelector = function (x) { return x; };
+var defaultMutationStateSelector = function (x) { return x; };
+var noPendingQueryStateSelector = function (selected) {
+    if (selected.isUninitialized) {
+        return __spreadProps(__spreadValues({}, selected), {
+            isUninitialized: false,
+            isFetching: true,
+            isLoading: selected.data !== void 0 ? false : true,
+            status: _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.QueryStatus.pending
+        });
+    }
+    return selected;
+};
+function buildHooks(_c) {
+    var api = _c.api, _d = _c.moduleOptions, batch = _d.batch, useDispatch = _d.useDispatch, useSelector = _d.useSelector, useStore = _d.useStore, unstable__sideEffectsInRender = _d.unstable__sideEffectsInRender, serializeQueryArgs = _c.serializeQueryArgs, context = _c.context;
+    var usePossiblyImmediateEffect = unstable__sideEffectsInRender ? function (cb) { return cb(); } : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+    return { buildQueryHooks: buildQueryHooks, buildMutationHook: buildMutationHook, usePrefetch: usePrefetch };
+    function queryStatePreSelector(currentState, lastResult, queryArgs) {
+        if ((lastResult == null ? void 0 : lastResult.endpointName) && currentState.isUninitialized) {
+            var endpointName = lastResult.endpointName;
+            var endpointDefinition = context.endpointDefinitions[endpointName];
+            if (serializeQueryArgs({
+                queryArgs: lastResult.originalArgs,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            }) === serializeQueryArgs({
+                queryArgs: queryArgs,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            }))
+                lastResult = void 0;
+        }
+        var data = currentState.isSuccess ? currentState.data : lastResult == null ? void 0 : lastResult.data;
+        if (data === void 0)
+            data = currentState.data;
+        var hasData = data !== void 0;
+        var isFetching = currentState.isLoading;
+        var isLoading = !hasData && isFetching;
+        var isSuccess = currentState.isSuccess || isFetching && hasData;
+        return __spreadProps(__spreadValues({}, currentState), {
+            data: data,
+            currentData: currentState.data,
+            isFetching: isFetching,
+            isLoading: isLoading,
+            isSuccess: isSuccess
+        });
+    }
+    function usePrefetch(endpointName, defaultOptions) {
+        var dispatch = useDispatch();
+        var stableDefaultOptions = useShallowStableValue(defaultOptions);
+        return (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (arg, options) { return dispatch(api.util.prefetch(endpointName, arg, __spreadValues(__spreadValues({}, stableDefaultOptions), options))); }, [endpointName, dispatch, stableDefaultOptions]);
+    }
+    function buildQueryHooks(name) {
+        var useQuerySubscription = function (arg, _c) {
+            var _d = _c === void 0 ? {} : _c, refetchOnReconnect = _d.refetchOnReconnect, refetchOnFocus = _d.refetchOnFocus, refetchOnMountOrArgChange = _d.refetchOnMountOrArgChange, _e = _d.skip, skip = _e === void 0 ? false : _e, _f = _d.pollingInterval, pollingInterval = _f === void 0 ? 0 : _f;
+            var initiate = api.endpoints[name].initiate;
+            var dispatch = useDispatch();
+            var stableArg = useStableQueryArgs(skip ? _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipToken : arg, serializeQueryArgs, context.endpointDefinitions[name], name);
+            var stableSubscriptionOptions = useShallowStableValue({
+                refetchOnReconnect: refetchOnReconnect,
+                refetchOnFocus: refetchOnFocus,
+                pollingInterval: pollingInterval
+            });
+            var promiseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+            var _g = promiseRef.current || {}, queryCacheKey = _g.queryCacheKey, requestId = _g.requestId;
+            var subscriptionRemoved = useSelector(function (state) {
+                var _a;
+                return !!queryCacheKey && !!requestId && !((_a = state[api.reducerPath].subscriptions[queryCacheKey]) == null ? void 0 : _a[requestId]);
+            });
+            usePossiblyImmediateEffect(function () {
+                promiseRef.current = void 0;
+            }, [subscriptionRemoved]);
+            usePossiblyImmediateEffect(function () {
+                var _a;
+                var lastPromise = promiseRef.current;
+                if (typeof process !== "undefined" && "development" === "removeMeOnCompilation") {}
+                if (stableArg === _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipToken) {
+                    lastPromise == null ? void 0 : lastPromise.unsubscribe();
+                    promiseRef.current = void 0;
+                    return;
+                }
+                var lastSubscriptionOptions = (_a = promiseRef.current) == null ? void 0 : _a.subscriptionOptions;
+                if (!lastPromise || lastPromise.arg !== stableArg) {
+                    lastPromise == null ? void 0 : lastPromise.unsubscribe();
+                    var promise = dispatch(initiate(stableArg, {
+                        subscriptionOptions: stableSubscriptionOptions,
+                        forceRefetch: refetchOnMountOrArgChange
+                    }));
+                    promiseRef.current = promise;
+                }
+                else if (stableSubscriptionOptions !== lastSubscriptionOptions) {
+                    lastPromise.updateSubscriptionOptions(stableSubscriptionOptions);
+                }
+            }, [
+                dispatch,
+                initiate,
+                refetchOnMountOrArgChange,
+                stableArg,
+                stableSubscriptionOptions,
+                subscriptionRemoved
+            ]);
+            (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+                return function () {
+                    var _a;
+                    (_a = promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                    promiseRef.current = void 0;
+                };
+            }, []);
+            return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return ({
+                refetch: function () {
+                    var _a;
+                    return void ((_a = promiseRef.current) == null ? void 0 : _a.refetch());
+                }
+            }); }, []);
+        };
+        var useLazyQuerySubscription = function (_c) {
+            var _d = _c === void 0 ? {} : _c, refetchOnReconnect = _d.refetchOnReconnect, refetchOnFocus = _d.refetchOnFocus, _e = _d.pollingInterval, pollingInterval = _e === void 0 ? 0 : _e;
+            var initiate = api.endpoints[name].initiate;
+            var dispatch = useDispatch();
+            var _f = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(UNINITIALIZED_VALUE), arg = _f[0], setArg = _f[1];
+            var promiseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+            var stableSubscriptionOptions = useShallowStableValue({
+                refetchOnReconnect: refetchOnReconnect,
+                refetchOnFocus: refetchOnFocus,
+                pollingInterval: pollingInterval
+            });
+            usePossiblyImmediateEffect(function () {
+                var _a, _b;
+                var lastSubscriptionOptions = (_a = promiseRef.current) == null ? void 0 : _a.subscriptionOptions;
+                if (stableSubscriptionOptions !== lastSubscriptionOptions) {
+                    (_b = promiseRef.current) == null ? void 0 : _b.updateSubscriptionOptions(stableSubscriptionOptions);
+                }
+            }, [stableSubscriptionOptions]);
+            var subscriptionOptionsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(stableSubscriptionOptions);
+            usePossiblyImmediateEffect(function () {
+                subscriptionOptionsRef.current = stableSubscriptionOptions;
+            }, [stableSubscriptionOptions]);
+            var trigger = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (arg2, preferCacheValue) {
+                if (preferCacheValue === void 0) { preferCacheValue = false; }
+                var promise;
+                batch(function () {
+                    var _a;
+                    (_a = promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                    promiseRef.current = promise = dispatch(initiate(arg2, {
+                        subscriptionOptions: subscriptionOptionsRef.current,
+                        forceRefetch: !preferCacheValue
+                    }));
+                    setArg(arg2);
+                });
+                return promise;
+            }, [dispatch, initiate]);
+            (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+                return function () {
+                    var _a;
+                    (_a = promiseRef == null ? void 0 : promiseRef.current) == null ? void 0 : _a.unsubscribe();
+                };
+            }, []);
+            (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+                if (arg !== UNINITIALIZED_VALUE && !promiseRef.current) {
+                    trigger(arg, true);
+                }
+            }, [arg, trigger]);
+            return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return [trigger, arg]; }, [trigger, arg]);
+        };
+        var useQueryState = function (arg, _c) {
+            var _d = _c === void 0 ? {} : _c, _e = _d.skip, skip = _e === void 0 ? false : _e, _f = _d.selectFromResult, selectFromResult = _f === void 0 ? defaultQueryStateSelector : _f;
+            var select = api.endpoints[name].select;
+            var stableArg = useStableQueryArgs(skip ? _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipToken : arg, serializeQueryArgs, context.endpointDefinitions[name], name);
+            var lastValue = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+            var selectDefaultResult = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)([
+                select(stableArg),
+                function (_, lastResult) { return lastResult; },
+                function (_) { return stableArg; }
+            ], queryStatePreSelector); }, [select, stableArg]);
+            var querySelector = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)([selectDefaultResult], selectFromResult); }, [selectDefaultResult, selectFromResult]);
+            var currentState = useSelector(function (state) { return querySelector(state, lastValue.current); }, react_redux__WEBPACK_IMPORTED_MODULE_1__.shallowEqual);
+            var store = useStore();
+            var newLastValue = selectDefaultResult(store.getState(), lastValue.current);
+            useIsomorphicLayoutEffect(function () {
+                lastValue.current = newLastValue;
+            }, [newLastValue]);
+            return currentState;
+        };
+        return {
+            useQueryState: useQueryState,
+            useQuerySubscription: useQuerySubscription,
+            useLazyQuerySubscription: useLazyQuerySubscription,
+            useLazyQuery: function (options) {
+                var _c = useLazyQuerySubscription(options), trigger = _c[0], arg = _c[1];
+                var queryStateResults = useQueryState(arg, __spreadProps(__spreadValues({}, options), {
+                    skip: arg === UNINITIALIZED_VALUE
+                }));
+                var info = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return ({ lastArg: arg }); }, [arg]);
+                return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return [trigger, queryStateResults, info]; }, [trigger, queryStateResults, info]);
+            },
+            useQuery: function (arg, options) {
+                var querySubscriptionResults = useQuerySubscription(arg, options);
+                var queryStateResults = useQueryState(arg, __spreadValues({
+                    selectFromResult: arg === _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.skipToken || (options == null ? void 0 : options.skip) ? void 0 : noPendingQueryStateSelector
+                }, options));
+                var data = queryStateResults.data, status = queryStateResults.status, isLoading = queryStateResults.isLoading, isSuccess = queryStateResults.isSuccess, isError = queryStateResults.isError, error = queryStateResults.error;
+                (0,react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue)({ data: data, status: status, isLoading: isLoading, isSuccess: isSuccess, isError: isError, error: error });
+                return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return __spreadValues(__spreadValues({}, queryStateResults), querySubscriptionResults); }, [queryStateResults, querySubscriptionResults]);
+            }
+        };
+    }
+    function buildMutationHook(name) {
+        return function (_c) {
+            var _d = _c === void 0 ? {} : _c, _e = _d.selectFromResult, selectFromResult = _e === void 0 ? defaultMutationStateSelector : _e, fixedCacheKey = _d.fixedCacheKey;
+            var _f = api.endpoints[name], select = _f.select, initiate = _f.initiate;
+            var dispatch = useDispatch();
+            var _g = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(), promise = _g[0], setPromise = _g[1];
+            (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () { return function () {
+                if (!(promise == null ? void 0 : promise.arg.fixedCacheKey)) {
+                    promise == null ? void 0 : promise.reset();
+                }
+            }; }, [promise]);
+            var triggerMutation = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (arg) {
+                var promise2 = dispatch(initiate(arg, { fixedCacheKey: fixedCacheKey }));
+                setPromise(promise2);
+                return promise2;
+            }, [dispatch, initiate, fixedCacheKey]);
+            var requestId = (promise || {}).requestId;
+            var mutationSelector = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)([select({ fixedCacheKey: fixedCacheKey, requestId: promise == null ? void 0 : promise.requestId })], selectFromResult); }, [select, promise, selectFromResult, fixedCacheKey]);
+            var currentState = useSelector(mutationSelector, react_redux__WEBPACK_IMPORTED_MODULE_1__.shallowEqual);
+            var originalArgs = fixedCacheKey == null ? promise == null ? void 0 : promise.arg.originalArgs : void 0;
+            var reset = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+                batch(function () {
+                    if (promise) {
+                        setPromise(void 0);
+                    }
+                    if (fixedCacheKey) {
+                        dispatch(api.internalActions.removeMutationResult({
+                            requestId: requestId,
+                            fixedCacheKey: fixedCacheKey
+                        }));
+                    }
+                });
+            }, [dispatch, fixedCacheKey, promise, requestId]);
+            var endpointName = currentState.endpointName, data = currentState.data, status = currentState.status, isLoading = currentState.isLoading, isSuccess = currentState.isSuccess, isError = currentState.isError, error = currentState.error;
+            (0,react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue)({ endpointName: endpointName, data: data, status: status, isLoading: isLoading, isSuccess: isSuccess, isError: isError, error: error });
+            var finalState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return __spreadProps(__spreadValues({}, currentState), { originalArgs: originalArgs, reset: reset }); }, [currentState, originalArgs, reset]);
+            return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () { return [triggerMutation, finalState]; }, [triggerMutation, finalState]);
+        };
+    }
+}
+// src/query/endpointDefinitions.ts
+var DefinitionType;
+(function (DefinitionType2) {
+    DefinitionType2["query"] = "query";
+    DefinitionType2["mutation"] = "mutation";
+})(DefinitionType || (DefinitionType = {}));
+function isQueryDefinition(e) {
+    return e.type === DefinitionType.query;
+}
+function isMutationDefinition(e) {
+    return e.type === DefinitionType.mutation;
+}
+// src/query/utils/capitalize.ts
+function capitalize(str) {
+    return str.replace(str[0], str[0].toUpperCase());
+}
+// src/query/tsHelpers.ts
+function safeAssign(target) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    Object.assign.apply(Object, __spreadArray([target], args));
+}
+// src/query/react/module.ts
+
+var reactHooksModuleName = /* @__PURE__ */ Symbol();
+var reactHooksModule = function (_c) {
+    var _d = _c === void 0 ? {} : _c, _e = _d.batch, batch = _e === void 0 ? react_redux__WEBPACK_IMPORTED_MODULE_1__.batch : _e, _f = _d.useDispatch, useDispatch = _f === void 0 ? react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch : _f, _g = _d.useSelector, useSelector = _g === void 0 ? react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector : _g, _h = _d.useStore, useStore = _h === void 0 ? react_redux__WEBPACK_IMPORTED_MODULE_1__.useStore : _h, _j = _d.unstable__sideEffectsInRender, unstable__sideEffectsInRender = _j === void 0 ? false : _j;
+    return ({
+        name: reactHooksModuleName,
+        init: function (api, _c, context) {
+            var serializeQueryArgs = _c.serializeQueryArgs;
+            var anyApi = api;
+            var _d = buildHooks({
+                api: api,
+                moduleOptions: {
+                    batch: batch,
+                    useDispatch: useDispatch,
+                    useSelector: useSelector,
+                    useStore: useStore,
+                    unstable__sideEffectsInRender: unstable__sideEffectsInRender
+                },
+                serializeQueryArgs: serializeQueryArgs,
+                context: context
+            }), buildQueryHooks = _d.buildQueryHooks, buildMutationHook = _d.buildMutationHook, usePrefetch = _d.usePrefetch;
+            safeAssign(anyApi, { usePrefetch: usePrefetch });
+            safeAssign(context, { batch: batch });
+            return {
+                injectEndpoint: function (endpointName, definition) {
+                    if (isQueryDefinition(definition)) {
+                        var _c = buildQueryHooks(endpointName), useQuery = _c.useQuery, useLazyQuery = _c.useLazyQuery, useLazyQuerySubscription = _c.useLazyQuerySubscription, useQueryState = _c.useQueryState, useQuerySubscription = _c.useQuerySubscription;
+                        safeAssign(anyApi.endpoints[endpointName], {
+                            useQuery: useQuery,
+                            useLazyQuery: useLazyQuery,
+                            useLazyQuerySubscription: useLazyQuerySubscription,
+                            useQueryState: useQueryState,
+                            useQuerySubscription: useQuerySubscription
+                        });
+                        api["use" + capitalize(endpointName) + "Query"] = useQuery;
+                        api["useLazy" + capitalize(endpointName) + "Query"] = useLazyQuery;
+                    }
+                    else if (isMutationDefinition(definition)) {
+                        var useMutation = buildMutationHook(endpointName);
+                        safeAssign(anyApi.endpoints[endpointName], {
+                            useMutation: useMutation
+                        });
+                        api["use" + capitalize(endpointName) + "Mutation"] = useMutation;
+                    }
+                }
+            };
+        }
+    });
+};
+// src/query/react/index.ts
+
+// src/query/react/ApiProvider.tsx
+
+
+
+
+
+function ApiProvider(props) {
+    var store = react__WEBPACK_IMPORTED_MODULE_0___default().useState(function () {
+        var _c;
+        return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_4__.configureStore)({
+            reducer: (_c = {},
+                _c[props.api.reducerPath] = props.api.reducer,
+                _c),
+            middleware: function (gDM) { return gDM().concat(props.api.middleware); }
+        });
+    })[0];
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () { return props.setupListeners === false ? void 0 : (0,_reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.setupListeners)(store.dispatch, props.setupListeners); }, [props.setupListeners]);
+    return /* @__PURE__ */ react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_redux__WEBPACK_IMPORTED_MODULE_1__.Provider, {
+        store: store,
+        context: props.context
+    }, props.children);
+}
+// src/query/react/index.ts
+var createApi = /* @__PURE__ */ (0,_reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.buildCreateApi)((0,_reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.coreModule)(), reactHooksModule());
+
+//# sourceMappingURL=rtk-query-react.esm.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "QueryStatus": () => (/* binding */ QueryStatus),
+/* harmony export */   "buildCreateApi": () => (/* binding */ buildCreateApi),
+/* harmony export */   "copyWithStructuralSharing": () => (/* binding */ copyWithStructuralSharing),
+/* harmony export */   "coreModule": () => (/* binding */ coreModule),
+/* harmony export */   "createApi": () => (/* binding */ createApi),
+/* harmony export */   "fakeBaseQuery": () => (/* binding */ fakeBaseQuery),
+/* harmony export */   "fetchBaseQuery": () => (/* binding */ fetchBaseQuery),
+/* harmony export */   "retry": () => (/* binding */ retry),
+/* harmony export */   "setupListeners": () => (/* binding */ setupListeners),
+/* harmony export */   "skipSelector": () => (/* binding */ skipSelector),
+/* harmony export */   "skipToken": () => (/* binding */ skipToken)
+/* harmony export */ });
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/reselect/es/index.js");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var reselect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reselect */ "./node_modules/reselect/es/defaultMemoize.js");
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
+var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = function (obj, key, value) { return key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value: value }) : obj[key] = value; };
+var __spreadValues = function (a, b) {
+    for (var prop in b || (b = {}))
+        if (__hasOwnProp.call(b, prop))
+            __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+        for (var _i = 0, _e = __getOwnPropSymbols(b); _i < _e.length; _i++) {
+            var prop = _e[_i];
+            if (__propIsEnum.call(b, prop))
+                __defNormalProp(a, prop, b[prop]);
+        }
+    return a;
+};
+var __spreadProps = function (a, b) { return __defProps(a, __getOwnPropDescs(b)); };
+var __objRest = function (source, exclude) {
+    var target = {};
+    for (var prop in source)
+        if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
+            target[prop] = source[prop];
+    if (source != null && __getOwnPropSymbols)
+        for (var _i = 0, _e = __getOwnPropSymbols(source); _i < _e.length; _i++) {
+            var prop = _e[_i];
+            if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
+                target[prop] = source[prop];
+        }
+    return target;
+};
+var __async = function (__this, __arguments, generator) {
+    return new Promise(function (resolve, reject) {
+        var fulfilled = function (value) {
+            try {
+                step(generator.next(value));
+            }
+            catch (e) {
+                reject(e);
+            }
+        };
+        var rejected = function (value) {
+            try {
+                step(generator.throw(value));
+            }
+            catch (e) {
+                reject(e);
+            }
+        };
+        var step = function (x) { return x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected); };
+        step((generator = generator.apply(__this, __arguments)).next());
+    });
+};
+// src/query/core/apiState.ts
+var QueryStatus;
+(function (QueryStatus2) {
+    QueryStatus2["uninitialized"] = "uninitialized";
+    QueryStatus2["pending"] = "pending";
+    QueryStatus2["fulfilled"] = "fulfilled";
+    QueryStatus2["rejected"] = "rejected";
+})(QueryStatus || (QueryStatus = {}));
+function getRequestStatusFlags(status) {
+    return {
+        status: status,
+        isUninitialized: status === QueryStatus.uninitialized,
+        isLoading: status === QueryStatus.pending,
+        isSuccess: status === QueryStatus.fulfilled,
+        isError: status === QueryStatus.rejected
+    };
+}
+// src/query/utils/isAbsoluteUrl.ts
+function isAbsoluteUrl(url) {
+    return new RegExp("(^|:)//").test(url);
+}
+// src/query/utils/joinUrls.ts
+var withoutTrailingSlash = function (url) { return url.replace(/\/$/, ""); };
+var withoutLeadingSlash = function (url) { return url.replace(/^\//, ""); };
+function joinUrls(base, url) {
+    if (!base) {
+        return url;
+    }
+    if (!url) {
+        return base;
+    }
+    if (isAbsoluteUrl(url)) {
+        return url;
+    }
+    var delimiter = base.endsWith("/") || !url.startsWith("?") ? "/" : "";
+    base = withoutTrailingSlash(base);
+    url = withoutLeadingSlash(url);
+    return "" + base + delimiter + url;
+}
+// src/query/utils/flatten.ts
+var flatten = function (arr) { return [].concat.apply([], arr); };
+// src/query/utils/isOnline.ts
+function isOnline() {
+    return typeof navigator === "undefined" ? true : navigator.onLine === void 0 ? true : navigator.onLine;
+}
+// src/query/utils/isDocumentVisible.ts
+function isDocumentVisible() {
+    if (typeof document === "undefined") {
+        return true;
+    }
+    return document.visibilityState !== "hidden";
+}
+// src/query/utils/copyWithStructuralSharing.ts
+
+var isPlainObject = _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPlainObject;
+function copyWithStructuralSharing(oldObj, newObj) {
+    if (oldObj === newObj || !(isPlainObject(oldObj) && isPlainObject(newObj) || Array.isArray(oldObj) && Array.isArray(newObj))) {
+        return newObj;
+    }
+    var newKeys = Object.keys(newObj);
+    var oldKeys = Object.keys(oldObj);
+    var isSameObject = newKeys.length === oldKeys.length;
+    var mergeObj = Array.isArray(newObj) ? [] : {};
+    for (var _i = 0, newKeys_1 = newKeys; _i < newKeys_1.length; _i++) {
+        var key = newKeys_1[_i];
+        mergeObj[key] = copyWithStructuralSharing(oldObj[key], newObj[key]);
+        if (isSameObject)
+            isSameObject = oldObj[key] === mergeObj[key];
+    }
+    return isSameObject ? oldObj : mergeObj;
+}
+// src/query/fetchBaseQuery.ts
+
+var defaultFetchFn = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    return fetch.apply(void 0, args);
+};
+var defaultValidateStatus = function (response) { return response.status >= 200 && response.status <= 299; };
+var isJsonContentType = function (headers) {
+    var _a, _b;
+    return (_b = (_a = headers.get("content-type")) == null ? void 0 : _a.trim()) == null ? void 0 : _b.startsWith("application/json");
+};
+var handleResponse = function (response, responseHandler) { return __async(void 0, null, function () {
+    var text;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                if (typeof responseHandler === "function") {
+                    return [2 /*return*/, responseHandler(response)];
+                }
+                if (responseHandler === "text") {
+                    return [2 /*return*/, response.text()];
+                }
+                if (!(responseHandler === "json")) return [3 /*break*/, 2];
+                return [4 /*yield*/, response.text()];
+            case 1:
+                text = _e.sent();
+                return [2 /*return*/, text.length ? JSON.parse(text) : null];
+            case 2: return [2 /*return*/];
+        }
+    });
+}); };
+function stripUndefined(obj) {
+    if (!(0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPlainObject)(obj)) {
+        return obj;
+    }
+    var copy = __spreadValues({}, obj);
+    for (var _i = 0, _e = Object.entries(copy); _i < _e.length; _i++) {
+        var _f = _e[_i], k = _f[0], v = _f[1];
+        if (v === void 0)
+            delete copy[k];
+    }
+    return copy;
+}
+function fetchBaseQuery(_a) {
+    var _this = this;
+    if (_a === void 0) { _a = {}; }
+    var _b = _a, baseUrl = _b.baseUrl, _e = _b.prepareHeaders, prepareHeaders = _e === void 0 ? function (x) { return x; } : _e, _f = _b.fetchFn, fetchFn = _f === void 0 ? defaultFetchFn : _f, paramsSerializer = _b.paramsSerializer, baseFetchOptions = __objRest(_b, [
+        "baseUrl",
+        "prepareHeaders",
+        "fetchFn",
+        "paramsSerializer"
+    ]);
+    if (typeof fetch === "undefined" && fetchFn === defaultFetchFn) {
+        console.warn("Warning: `fetch` is not available. Please supply a custom `fetchFn` property to use `fetchBaseQuery` on SSR environments.");
+    }
+    return function (arg, api) { return __async(_this, null, function () {
+        var signal, getState, extra, endpoint, forced, type, meta, _a2, url, _e, method, _f, headers, _g, body, _h, params, _j, responseHandler, _k, validateStatus, rest, config, _l, isJsonifiable, divider, query, request, requestClone, response, e_1, responseClone, resultData, responseText, handleResponseError_1, e_2;
+        return __generator(this, function (_m) {
+            switch (_m.label) {
+                case 0:
+                    signal = api.signal, getState = api.getState, extra = api.extra, endpoint = api.endpoint, forced = api.forced, type = api.type;
+                    _a2 = typeof arg == "string" ? { url: arg } : arg, url = _a2.url, _e = _a2.method, method = _e === void 0 ? "GET" : _e, _f = _a2.headers, headers = _f === void 0 ? new Headers({}) : _f, _g = _a2.body, body = _g === void 0 ? void 0 : _g, _h = _a2.params, params = _h === void 0 ? void 0 : _h, _j = _a2.responseHandler, responseHandler = _j === void 0 ? "json" : _j, _k = _a2.validateStatus, validateStatus = _k === void 0 ? defaultValidateStatus : _k, rest = __objRest(_a2, [
+                        "url",
+                        "method",
+                        "headers",
+                        "body",
+                        "params",
+                        "responseHandler",
+                        "validateStatus"
+                    ]);
+                    config = __spreadValues(__spreadProps(__spreadValues({}, baseFetchOptions), {
+                        method: method,
+                        signal: signal,
+                        body: body
+                    }), rest);
+                    _l = config;
+                    return [4 /*yield*/, prepareHeaders(new Headers(stripUndefined(headers)), { getState: getState, extra: extra, endpoint: endpoint, forced: forced, type: type })];
+                case 1:
+                    _l.headers = _m.sent();
+                    isJsonifiable = function (body2) { return typeof body2 === "object" && ((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPlainObject)(body2) || Array.isArray(body2) || typeof body2.toJSON === "function"); };
+                    if (!config.headers.has("content-type") && isJsonifiable(body)) {
+                        config.headers.set("content-type", "application/json");
+                    }
+                    if (isJsonifiable(body) && isJsonContentType(config.headers)) {
+                        config.body = JSON.stringify(body);
+                    }
+                    if (params) {
+                        divider = ~url.indexOf("?") ? "&" : "?";
+                        query = paramsSerializer ? paramsSerializer(params) : new URLSearchParams(stripUndefined(params));
+                        url += divider + query;
+                    }
+                    url = joinUrls(baseUrl, url);
+                    request = new Request(url, config);
+                    requestClone = request.clone();
+                    meta = { request: requestClone };
+                    _m.label = 2;
+                case 2:
+                    _m.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, fetchFn(request)];
+                case 3:
+                    response = _m.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_1 = _m.sent();
+                    return [2 /*return*/, { error: { status: "FETCH_ERROR", error: String(e_1) }, meta: meta }];
+                case 5:
+                    responseClone = response.clone();
+                    meta.response = responseClone;
+                    responseText = "";
+                    _m.label = 6;
+                case 6:
+                    _m.trys.push([6, 8, , 9]);
+                    return [4 /*yield*/, Promise.all([
+                            handleResponse(response, responseHandler).then(function (r) { return resultData = r; }, function (e) { return handleResponseError_1 = e; }),
+                            responseClone.text().then(function (r) { return responseText = r; }, function () {
+                            })
+                        ])];
+                case 7:
+                    _m.sent();
+                    if (handleResponseError_1)
+                        throw handleResponseError_1;
+                    return [3 /*break*/, 9];
+                case 8:
+                    e_2 = _m.sent();
+                    return [2 /*return*/, {
+                            error: {
+                                status: "PARSING_ERROR",
+                                originalStatus: response.status,
+                                data: responseText,
+                                error: String(e_2)
+                            },
+                            meta: meta
+                        }];
+                case 9: return [2 /*return*/, validateStatus(response, resultData) ? {
+                        data: resultData,
+                        meta: meta
+                    } : {
+                        error: {
+                            status: response.status,
+                            data: resultData
+                        },
+                        meta: meta
+                    }];
+            }
+        });
+    }); };
+}
+// src/query/HandledError.ts
+var HandledError = /** @class */ (function () {
+    function HandledError(value, meta) {
+        if (meta === void 0) { meta = void 0; }
+        this.value = value;
+        this.meta = meta;
+    }
+    return HandledError;
+}());
+// src/query/retry.ts
+function defaultBackoff(attempt, maxRetries) {
+    if (attempt === void 0) { attempt = 0; }
+    if (maxRetries === void 0) { maxRetries = 5; }
+    return __async(this, null, function () {
+        var attempts, timeout;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    attempts = Math.min(attempt, maxRetries);
+                    timeout = ~~((Math.random() + 0.4) * (300 << attempts));
+                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(function (res) { return resolve(res); }, timeout); })];
+                case 1:
+                    _e.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function fail(e) {
+    throw Object.assign(new HandledError({ error: e }), {
+        throwImmediately: true
+    });
+}
+var retryWithBackoff = function (baseQuery, defaultOptions) { return function (args, api, extraOptions) { return __async(void 0, null, function () {
+    var options, retry2, result, e_3;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                options = __spreadValues(__spreadValues({
+                    maxRetries: 5,
+                    backoff: defaultBackoff
+                }, defaultOptions), extraOptions);
+                retry2 = 0;
+                _e.label = 1;
+            case 1:
+                if (false) {}
+                _e.label = 2;
+            case 2:
+                _e.trys.push([2, 4, , 6]);
+                return [4 /*yield*/, baseQuery(args, api, extraOptions)];
+            case 3:
+                result = _e.sent();
+                if (result.error) {
+                    throw new HandledError(result);
+                }
+                return [2 /*return*/, result];
+            case 4:
+                e_3 = _e.sent();
+                retry2++;
+                if (e_3.throwImmediately || retry2 > options.maxRetries) {
+                    if (e_3 instanceof HandledError) {
+                        return [2 /*return*/, e_3.value];
+                    }
+                    throw e_3;
+                }
+                return [4 /*yield*/, options.backoff(retry2, options.maxRetries)];
+            case 5:
+                _e.sent();
+                return [3 /*break*/, 6];
+            case 6: return [3 /*break*/, 1];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); }; };
+var retry = /* @__PURE__ */ Object.assign(retryWithBackoff, { fail: fail });
+// src/query/core/setupListeners.ts
+
+var onFocus = /* @__PURE__ */ (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)("__rtkq/focused");
+var onFocusLost = /* @__PURE__ */ (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)("__rtkq/unfocused");
+var onOnline = /* @__PURE__ */ (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)("__rtkq/online");
+var onOffline = /* @__PURE__ */ (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)("__rtkq/offline");
+var initialized = false;
+function setupListeners(dispatch, customHandler) {
+    function defaultHandler() {
+        var handleFocus = function () { return dispatch(onFocus()); };
+        var handleFocusLost = function () { return dispatch(onFocusLost()); };
+        var handleOnline = function () { return dispatch(onOnline()); };
+        var handleOffline = function () { return dispatch(onOffline()); };
+        var handleVisibilityChange = function () {
+            if (window.document.visibilityState === "visible") {
+                handleFocus();
+            }
+            else {
+                handleFocusLost();
+            }
+        };
+        if (!initialized) {
+            if (typeof window !== "undefined" && window.addEventListener) {
+                window.addEventListener("visibilitychange", handleVisibilityChange, false);
+                window.addEventListener("focus", handleFocus, false);
+                window.addEventListener("online", handleOnline, false);
+                window.addEventListener("offline", handleOffline, false);
+                initialized = true;
+            }
+        }
+        var unsubscribe = function () {
+            window.removeEventListener("focus", handleFocus);
+            window.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+            initialized = false;
+        };
+        return unsubscribe;
+    }
+    return customHandler ? customHandler(dispatch, { onFocus: onFocus, onFocusLost: onFocusLost, onOffline: onOffline, onOnline: onOnline }) : defaultHandler();
+}
+// src/query/core/buildSelectors.ts
+
+// src/query/endpointDefinitions.ts
+var DefinitionType;
+(function (DefinitionType2) {
+    DefinitionType2["query"] = "query";
+    DefinitionType2["mutation"] = "mutation";
+})(DefinitionType || (DefinitionType = {}));
+function isQueryDefinition(e) {
+    return e.type === DefinitionType.query;
+}
+function isMutationDefinition(e) {
+    return e.type === DefinitionType.mutation;
+}
+function calculateProvidedBy(description, result, error, queryArg, meta, assertTagTypes) {
+    if (isFunction(description)) {
+        return description(result, error, queryArg, meta).map(expandTagDescription).map(assertTagTypes);
+    }
+    if (Array.isArray(description)) {
+        return description.map(expandTagDescription).map(assertTagTypes);
+    }
+    return [];
+}
+function isFunction(t) {
+    return typeof t === "function";
+}
+function expandTagDescription(description) {
+    return typeof description === "string" ? { type: description } : description;
+}
+// src/query/core/buildSlice.ts
+
+// src/query/core/buildThunks.ts
+
+
+
+function defaultTransformResponse(baseQueryReturnValue) {
+    return baseQueryReturnValue;
+}
+function buildThunks(_e) {
+    var _this = this;
+    var reducerPath = _e.reducerPath, baseQuery = _e.baseQuery, endpointDefinitions = _e.context.endpointDefinitions, serializeQueryArgs = _e.serializeQueryArgs, api = _e.api;
+    var patchQueryData = function (endpointName, args, patches) { return function (dispatch) {
+        var endpointDefinition = endpointDefinitions[endpointName];
+        dispatch(api.internalActions.queryResultPatched({
+            queryCacheKey: serializeQueryArgs({
+                queryArgs: args,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            }),
+            patches: patches
+        }));
+    }; };
+    var updateQueryData = function (endpointName, args, updateRecipe) { return function (dispatch, getState) {
+        var _e, _f;
+        var currentState = api.endpoints[endpointName].select(args)(getState());
+        var ret = {
+            patches: [],
+            inversePatches: [],
+            undo: function () { return dispatch(api.util.patchQueryData(endpointName, args, ret.inversePatches)); }
+        };
+        if (currentState.status === QueryStatus.uninitialized) {
+            return ret;
+        }
+        if ("data" in currentState) {
+            if ((0,immer__WEBPACK_IMPORTED_MODULE_1__.isDraftable)(currentState.data)) {
+                var _g = (0,immer__WEBPACK_IMPORTED_MODULE_1__.produceWithPatches)(currentState.data, updateRecipe), patches = _g[1], inversePatches = _g[2];
+                (_e = ret.patches).push.apply(_e, patches);
+                (_f = ret.inversePatches).push.apply(_f, inversePatches);
+            }
+            else {
+                var value = updateRecipe(currentState.data);
+                ret.patches.push({ op: "replace", path: [], value: value });
+                ret.inversePatches.push({
+                    op: "replace",
+                    path: [],
+                    value: currentState.data
+                });
+            }
+        }
+        dispatch(api.util.patchQueryData(endpointName, args, ret.patches));
+        return ret;
+    }; };
+    var executeEndpoint = function (_0, _1) { return __async(_this, [_0, _1], function (arg, _e) {
+        var endpointDefinition, transformResponse, result, baseQueryApi_1, what, err, _i, _f, key, _g, error_1;
+        var signal = _e.signal, rejectWithValue = _e.rejectWithValue, fulfillWithValue = _e.fulfillWithValue, dispatch = _e.dispatch, getState = _e.getState, extra = _e.extra;
+        return __generator(this, function (_h) {
+            switch (_h.label) {
+                case 0:
+                    endpointDefinition = endpointDefinitions[arg.endpointName];
+                    _h.label = 1;
+                case 1:
+                    _h.trys.push([1, 7, , 8]);
+                    transformResponse = defaultTransformResponse;
+                    result = void 0;
+                    baseQueryApi_1 = {
+                        signal: signal,
+                        dispatch: dispatch,
+                        getState: getState,
+                        extra: extra,
+                        endpoint: arg.endpointName,
+                        type: arg.type,
+                        forced: arg.type === "query" ? isForcedQuery(arg, getState()) : void 0
+                    };
+                    if (!endpointDefinition.query) return [3 /*break*/, 3];
+                    return [4 /*yield*/, baseQuery(endpointDefinition.query(arg.originalArgs), baseQueryApi_1, endpointDefinition.extraOptions)];
+                case 2:
+                    result = _h.sent();
+                    if (endpointDefinition.transformResponse) {
+                        transformResponse = endpointDefinition.transformResponse;
+                    }
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, endpointDefinition.queryFn(arg.originalArgs, baseQueryApi_1, endpointDefinition.extraOptions, function (arg2) { return baseQuery(arg2, baseQueryApi_1, endpointDefinition.extraOptions); })];
+                case 4:
+                    result = _h.sent();
+                    _h.label = 5;
+                case 5:
+                    if (typeof process !== "undefined" && "development" === "development") {
+                        what = endpointDefinition.query ? "`baseQuery`" : "`queryFn`";
+                        err = void 0;
+                        if (!result) {
+                            err = what + " did not return anything.";
+                        }
+                        else if (typeof result !== "object") {
+                            err = what + " did not return an object.";
+                        }
+                        else if (result.error && result.data) {
+                            err = what + " returned an object containing both `error` and `result`.";
+                        }
+                        else if (result.error === void 0 && result.data === void 0) {
+                            err = what + " returned an object containing neither a valid `error` and `result`. At least one of them should not be `undefined`";
+                        }
+                        else {
+                            for (_i = 0, _f = Object.keys(result); _i < _f.length; _i++) {
+                                key = _f[_i];
+                                if (key !== "error" && key !== "data" && key !== "meta") {
+                                    err = "The object returned by " + what + " has the unknown property " + key + ".";
+                                    break;
+                                }
+                            }
+                        }
+                        if (err) {
+                            console.error("Error encountered handling the endpoint " + arg.endpointName + ".\n              " + err + "\n              It needs to return an object with either the shape `{ data: <value> }` or `{ error: <value> }` that may contain an optional `meta` property.\n              Object returned was:", result);
+                        }
+                    }
+                    if (result.error)
+                        throw new HandledError(result.error, result.meta);
+                    _g = fulfillWithValue;
+                    return [4 /*yield*/, transformResponse(result.data, result.meta, arg.originalArgs)];
+                case 6: return [2 /*return*/, _g.apply(void 0, [_h.sent(), {
+                            fulfilledTimeStamp: Date.now(),
+                            baseQueryMeta: result.meta
+                        }])];
+                case 7:
+                    error_1 = _h.sent();
+                    if (error_1 instanceof HandledError) {
+                        return [2 /*return*/, rejectWithValue(error_1.value, { baseQueryMeta: error_1.meta })];
+                    }
+                    if (typeof process !== "undefined" && "development" === "development") {
+                        console.error("An unhandled error occurred processing a request for the endpoint \"" + arg.endpointName + "\".\nIn the case of an unhandled error, no tags will be \"provided\" or \"invalidated\".", error_1);
+                    }
+                    else {
+                        console.error(error_1);
+                    }
+                    throw error_1;
+                case 8: return [2 /*return*/];
+            }
+        });
+    }); };
+    function isForcedQuery(arg, state) {
+        var _a, _b, _c, _d;
+        var requestState = (_b = (_a = state[reducerPath]) == null ? void 0 : _a.queries) == null ? void 0 : _b[arg.queryCacheKey];
+        var baseFetchOnMountOrArgChange = (_c = state[reducerPath]) == null ? void 0 : _c.config.refetchOnMountOrArgChange;
+        var fulfilledVal = requestState == null ? void 0 : requestState.fulfilledTimeStamp;
+        var refetchVal = (_d = arg.forceRefetch) != null ? _d : arg.subscribe && baseFetchOnMountOrArgChange;
+        if (refetchVal) {
+            return refetchVal === true || (Number(new Date()) - Number(fulfilledVal)) / 1e3 >= refetchVal;
+        }
+        return false;
+    }
+    var queryThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAsyncThunk)(reducerPath + "/executeQuery", executeEndpoint, {
+        getPendingMeta: function () {
+            return { startedTimeStamp: Date.now() };
+        },
+        condition: function (arg, _e) {
+            var getState = _e.getState;
+            var _a, _b;
+            var state = getState();
+            var requestState = (_b = (_a = state[reducerPath]) == null ? void 0 : _a.queries) == null ? void 0 : _b[arg.queryCacheKey];
+            var fulfilledVal = requestState == null ? void 0 : requestState.fulfilledTimeStamp;
+            if ((requestState == null ? void 0 : requestState.status) === "pending")
+                return false;
+            if (isForcedQuery(arg, state))
+                return true;
+            if (fulfilledVal)
+                return false;
+            return true;
+        },
+        dispatchConditionRejection: true
+    });
+    var mutationThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAsyncThunk)(reducerPath + "/executeMutation", executeEndpoint, {
+        getPendingMeta: function () {
+            return { startedTimeStamp: Date.now() };
+        }
+    });
+    var hasTheForce = function (options) { return "force" in options; };
+    var hasMaxAge = function (options) { return "ifOlderThan" in options; };
+    var prefetch = function (endpointName, arg, options) { return function (dispatch, getState) {
+        var force = hasTheForce(options) && options.force;
+        var maxAge = hasMaxAge(options) && options.ifOlderThan;
+        var queryAction = function (force2) {
+            if (force2 === void 0) { force2 = true; }
+            return api.endpoints[endpointName].initiate(arg, { forceRefetch: force2 });
+        };
+        var latestStateValue = api.endpoints[endpointName].select(arg)(getState());
+        if (force) {
+            dispatch(queryAction());
+        }
+        else if (maxAge) {
+            var lastFulfilledTs = latestStateValue == null ? void 0 : latestStateValue.fulfilledTimeStamp;
+            if (!lastFulfilledTs) {
+                dispatch(queryAction());
+                return;
+            }
+            var shouldRetrigger = (Number(new Date()) - Number(new Date(lastFulfilledTs))) / 1e3 >= maxAge;
+            if (shouldRetrigger) {
+                dispatch(queryAction());
+            }
+        }
+        else {
+            dispatch(queryAction(false));
+        }
+    }; };
+    function matchesEndpoint(endpointName) {
+        return function (action) {
+            var _a, _b;
+            return ((_b = (_a = action == null ? void 0 : action.meta) == null ? void 0 : _a.arg) == null ? void 0 : _b.endpointName) === endpointName;
+        };
+    }
+    function buildMatchThunkActions(thunk, endpointName) {
+        return {
+            matchPending: (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAllOf)((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPending)(thunk), matchesEndpoint(endpointName)),
+            matchFulfilled: (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAllOf)((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(thunk), matchesEndpoint(endpointName)),
+            matchRejected: (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAllOf)((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isRejected)(thunk), matchesEndpoint(endpointName))
+        };
+    }
+    return {
+        queryThunk: queryThunk,
+        mutationThunk: mutationThunk,
+        prefetch: prefetch,
+        updateQueryData: updateQueryData,
+        patchQueryData: patchQueryData,
+        buildMatchThunkActions: buildMatchThunkActions
+    };
+}
+function calculateProvidedByThunk(action, type, endpointDefinitions, assertTagType) {
+    return calculateProvidedBy(endpointDefinitions[action.meta.arg.endpointName][type], (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(action) ? action.payload : void 0, (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isRejectedWithValue)(action) ? action.payload : void 0, action.meta.arg.originalArgs, "baseQueryMeta" in action.meta ? action.meta.baseQueryMeta : void 0, assertTagType);
+}
+// src/query/core/buildSlice.ts
+
+function updateQuerySubstateIfExists(state, queryCacheKey, update) {
+    var substate = state[queryCacheKey];
+    if (substate) {
+        update(substate);
+    }
+}
+function getMutationCacheKey(id) {
+    var _a;
+    return (_a = "arg" in id ? id.arg.fixedCacheKey : id.fixedCacheKey) != null ? _a : id.requestId;
+}
+function updateMutationSubstateIfExists(state, id, update) {
+    var substate = state[getMutationCacheKey(id)];
+    if (substate) {
+        update(substate);
+    }
+}
+var initialState = {};
+function buildSlice(_e) {
+    var reducerPath = _e.reducerPath, queryThunk = _e.queryThunk, mutationThunk = _e.mutationThunk, _f = _e.context, definitions = _f.endpointDefinitions, apiUid = _f.apiUid, extractRehydrationInfo = _f.extractRehydrationInfo, hasRehydrationInfo = _f.hasRehydrationInfo, assertTagType = _e.assertTagType, config = _e.config;
+    var resetApiState = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)(reducerPath + "/resetApiState");
+    var querySlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+        name: reducerPath + "/queries",
+        initialState: initialState,
+        reducers: {
+            removeQueryResult: function (draft, _e) {
+                var queryCacheKey = _e.payload.queryCacheKey;
+                delete draft[queryCacheKey];
+            },
+            queryResultPatched: function (draft, _e) {
+                var _f = _e.payload, queryCacheKey = _f.queryCacheKey, patches = _f.patches;
+                updateQuerySubstateIfExists(draft, queryCacheKey, function (substate) {
+                    substate.data = (0,immer__WEBPACK_IMPORTED_MODULE_1__.applyPatches)(substate.data, patches.concat());
+                });
+            }
+        },
+        extraReducers: function (builder) {
+            builder.addCase(queryThunk.pending, function (draft, _e) {
+                var meta = _e.meta, arg = _e.meta.arg;
+                var _a, _b;
+                if (arg.subscribe) {
+                    (_b = draft[_a = arg.queryCacheKey]) != null ? _b : draft[_a] = {
+                        status: QueryStatus.uninitialized,
+                        endpointName: arg.endpointName
+                    };
+                }
+                updateQuerySubstateIfExists(draft, arg.queryCacheKey, function (substate) {
+                    substate.status = QueryStatus.pending;
+                    substate.requestId = meta.requestId;
+                    if (arg.originalArgs !== void 0) {
+                        substate.originalArgs = arg.originalArgs;
+                    }
+                    substate.startedTimeStamp = meta.startedTimeStamp;
+                });
+            }).addCase(queryThunk.fulfilled, function (draft, _e) {
+                var meta = _e.meta, payload = _e.payload;
+                updateQuerySubstateIfExists(draft, meta.arg.queryCacheKey, function (substate) {
+                    var _a;
+                    if (substate.requestId !== meta.requestId)
+                        return;
+                    substate.status = QueryStatus.fulfilled;
+                    substate.data = ((_a = definitions[meta.arg.endpointName].structuralSharing) != null ? _a : true) ? copyWithStructuralSharing(substate.data, payload) : payload;
+                    delete substate.error;
+                    substate.fulfilledTimeStamp = meta.fulfilledTimeStamp;
+                });
+            }).addCase(queryThunk.rejected, function (draft, _e) {
+                var _f = _e.meta, condition = _f.condition, arg = _f.arg, requestId = _f.requestId, error = _e.error, payload = _e.payload;
+                updateQuerySubstateIfExists(draft, arg.queryCacheKey, function (substate) {
+                    if (condition) {
+                    }
+                    else {
+                        if (substate.requestId !== requestId)
+                            return;
+                        substate.status = QueryStatus.rejected;
+                        substate.error = payload != null ? payload : error;
+                    }
+                });
+            }).addMatcher(hasRehydrationInfo, function (draft, action) {
+                var queries = extractRehydrationInfo(action).queries;
+                for (var _i = 0, _e = Object.entries(queries); _i < _e.length; _i++) {
+                    var _f = _e[_i], key = _f[0], entry = _f[1];
+                    if ((entry == null ? void 0 : entry.status) === QueryStatus.fulfilled || (entry == null ? void 0 : entry.status) === QueryStatus.rejected) {
+                        draft[key] = entry;
+                    }
+                }
+            });
+        }
+    });
+    var mutationSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+        name: reducerPath + "/mutations",
+        initialState: initialState,
+        reducers: {
+            removeMutationResult: function (draft, _e) {
+                var payload = _e.payload;
+                var cacheKey = getMutationCacheKey(payload);
+                if (cacheKey in draft) {
+                    delete draft[cacheKey];
+                }
+            }
+        },
+        extraReducers: function (builder) {
+            builder.addCase(mutationThunk.pending, function (draft, _e) {
+                var meta = _e.meta, _f = _e.meta, requestId = _f.requestId, arg = _f.arg, startedTimeStamp = _f.startedTimeStamp;
+                if (!arg.track)
+                    return;
+                draft[getMutationCacheKey(meta)] = {
+                    requestId: requestId,
+                    status: QueryStatus.pending,
+                    endpointName: arg.endpointName,
+                    startedTimeStamp: startedTimeStamp
+                };
+            }).addCase(mutationThunk.fulfilled, function (draft, _e) {
+                var payload = _e.payload, meta = _e.meta;
+                if (!meta.arg.track)
+                    return;
+                updateMutationSubstateIfExists(draft, meta, function (substate) {
+                    if (substate.requestId !== meta.requestId)
+                        return;
+                    substate.status = QueryStatus.fulfilled;
+                    substate.data = payload;
+                    substate.fulfilledTimeStamp = meta.fulfilledTimeStamp;
+                });
+            }).addCase(mutationThunk.rejected, function (draft, _e) {
+                var payload = _e.payload, error = _e.error, meta = _e.meta;
+                if (!meta.arg.track)
+                    return;
+                updateMutationSubstateIfExists(draft, meta, function (substate) {
+                    if (substate.requestId !== meta.requestId)
+                        return;
+                    substate.status = QueryStatus.rejected;
+                    substate.error = payload != null ? payload : error;
+                });
+            }).addMatcher(hasRehydrationInfo, function (draft, action) {
+                var mutations = extractRehydrationInfo(action).mutations;
+                for (var _i = 0, _e = Object.entries(mutations); _i < _e.length; _i++) {
+                    var _f = _e[_i], key = _f[0], entry = _f[1];
+                    if (((entry == null ? void 0 : entry.status) === QueryStatus.fulfilled || (entry == null ? void 0 : entry.status) === QueryStatus.rejected) && key !== (entry == null ? void 0 : entry.requestId)) {
+                        draft[key] = entry;
+                    }
+                }
+            });
+        }
+    });
+    var invalidationSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+        name: reducerPath + "/invalidation",
+        initialState: initialState,
+        reducers: {},
+        extraReducers: function (builder) {
+            builder.addCase(querySlice.actions.removeQueryResult, function (draft, _e) {
+                var queryCacheKey = _e.payload.queryCacheKey;
+                for (var _i = 0, _f = Object.values(draft); _i < _f.length; _i++) {
+                    var tagTypeSubscriptions = _f[_i];
+                    for (var _g = 0, _h = Object.values(tagTypeSubscriptions); _g < _h.length; _g++) {
+                        var idSubscriptions = _h[_g];
+                        var foundAt = idSubscriptions.indexOf(queryCacheKey);
+                        if (foundAt !== -1) {
+                            idSubscriptions.splice(foundAt, 1);
+                        }
+                    }
+                }
+            }).addMatcher(hasRehydrationInfo, function (draft, action) {
+                var _a, _b, _c, _d;
+                var provided = extractRehydrationInfo(action).provided;
+                for (var _i = 0, _e = Object.entries(provided); _i < _e.length; _i++) {
+                    var _f = _e[_i], type = _f[0], incomingTags = _f[1];
+                    for (var _g = 0, _h = Object.entries(incomingTags); _g < _h.length; _g++) {
+                        var _j = _h[_g], id = _j[0], cacheKeys = _j[1];
+                        var subscribedQueries = (_d = (_b = (_a = draft[type]) != null ? _a : draft[type] = {})[_c = id || "__internal_without_id"]) != null ? _d : _b[_c] = [];
+                        for (var _k = 0, cacheKeys_1 = cacheKeys; _k < cacheKeys_1.length; _k++) {
+                            var queryCacheKey = cacheKeys_1[_k];
+                            var alreadySubscribed = subscribedQueries.includes(queryCacheKey);
+                            if (!alreadySubscribed) {
+                                subscribedQueries.push(queryCacheKey);
+                            }
+                        }
+                    }
+                }
+            }).addMatcher((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAnyOf)((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(queryThunk), (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isRejectedWithValue)(queryThunk)), function (draft, action) {
+                var _a, _b, _c, _d;
+                var providedTags = calculateProvidedByThunk(action, "providesTags", definitions, assertTagType);
+                var queryCacheKey = action.meta.arg.queryCacheKey;
+                for (var _i = 0, providedTags_1 = providedTags; _i < providedTags_1.length; _i++) {
+                    var _e = providedTags_1[_i], type = _e.type, id = _e.id;
+                    var subscribedQueries = (_d = (_b = (_a = draft[type]) != null ? _a : draft[type] = {})[_c = id || "__internal_without_id"]) != null ? _d : _b[_c] = [];
+                    var alreadySubscribed = subscribedQueries.includes(queryCacheKey);
+                    if (!alreadySubscribed) {
+                        subscribedQueries.push(queryCacheKey);
+                    }
+                }
+            });
+        }
+    });
+    var subscriptionSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+        name: reducerPath + "/subscriptions",
+        initialState: initialState,
+        reducers: {
+            updateSubscriptionOptions: function (draft, _e) {
+                var _f = _e.payload, queryCacheKey = _f.queryCacheKey, requestId = _f.requestId, options = _f.options;
+                var _a;
+                if ((_a = draft == null ? void 0 : draft[queryCacheKey]) == null ? void 0 : _a[requestId]) {
+                    draft[queryCacheKey][requestId] = options;
+                }
+            },
+            unsubscribeQueryResult: function (draft, _e) {
+                var _f = _e.payload, queryCacheKey = _f.queryCacheKey, requestId = _f.requestId;
+                if (draft[queryCacheKey]) {
+                    delete draft[queryCacheKey][requestId];
+                }
+            }
+        },
+        extraReducers: function (builder) {
+            builder.addCase(querySlice.actions.removeQueryResult, function (draft, _e) {
+                var queryCacheKey = _e.payload.queryCacheKey;
+                delete draft[queryCacheKey];
+            }).addCase(queryThunk.pending, function (draft, _e) {
+                var _f = _e.meta, arg = _f.arg, requestId = _f.requestId;
+                var _a, _b, _c, _d;
+                if (arg.subscribe) {
+                    var substate = (_b = draft[_a = arg.queryCacheKey]) != null ? _b : draft[_a] = {};
+                    substate[requestId] = (_d = (_c = arg.subscriptionOptions) != null ? _c : substate[requestId]) != null ? _d : {};
+                }
+            }).addCase(queryThunk.rejected, function (draft, _e) {
+                var _f = _e.meta, condition = _f.condition, arg = _f.arg, requestId = _f.requestId, error = _e.error, payload = _e.payload;
+                var _a, _b, _c, _d;
+                if (condition && arg.subscribe) {
+                    var substate = (_b = draft[_a = arg.queryCacheKey]) != null ? _b : draft[_a] = {};
+                    substate[requestId] = (_d = (_c = arg.subscriptionOptions) != null ? _c : substate[requestId]) != null ? _d : {};
+                }
+            }).addMatcher(hasRehydrationInfo, function (draft) { return __spreadValues({}, draft); });
+        }
+    });
+    var configSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+        name: reducerPath + "/config",
+        initialState: __spreadValues({
+            online: isOnline(),
+            focused: isDocumentVisible(),
+            middlewareRegistered: false
+        }, config),
+        reducers: {
+            middlewareRegistered: function (state, _e) {
+                var payload = _e.payload;
+                state.middlewareRegistered = state.middlewareRegistered === "conflict" || apiUid !== payload ? "conflict" : true;
+            }
+        },
+        extraReducers: function (builder) {
+            builder.addCase(onOnline, function (state) {
+                state.online = true;
+            }).addCase(onOffline, function (state) {
+                state.online = false;
+            }).addCase(onFocus, function (state) {
+                state.focused = true;
+            }).addCase(onFocusLost, function (state) {
+                state.focused = false;
+            }).addMatcher(hasRehydrationInfo, function (draft) { return __spreadValues({}, draft); });
+        }
+    });
+    var combinedReducer = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.combineReducers)({
+        queries: querySlice.reducer,
+        mutations: mutationSlice.reducer,
+        provided: invalidationSlice.reducer,
+        subscriptions: subscriptionSlice.reducer,
+        config: configSlice.reducer
+    });
+    var reducer = function (state, action) { return combinedReducer(resetApiState.match(action) ? void 0 : state, action); };
+    var actions = __spreadProps(__spreadValues(__spreadValues(__spreadValues(__spreadValues({}, configSlice.actions), querySlice.actions), subscriptionSlice.actions), mutationSlice.actions), {
+        unsubscribeMutationResult: mutationSlice.actions.removeMutationResult,
+        resetApiState: resetApiState
+    });
+    return { reducer: reducer, actions: actions };
+}
+// src/query/core/buildSelectors.ts
+var skipToken = /* @__PURE__ */ Symbol.for("RTKQ/skipToken");
+var skipSelector = skipToken;
+var initialSubState = {
+    status: QueryStatus.uninitialized
+};
+var defaultQuerySubState = /* @__PURE__ */ (0,immer__WEBPACK_IMPORTED_MODULE_1__["default"])(initialSubState, function () {
+});
+var defaultMutationSubState = /* @__PURE__ */ (0,immer__WEBPACK_IMPORTED_MODULE_1__["default"])(initialSubState, function () {
+});
+function buildSelectors(_e) {
+    var serializeQueryArgs = _e.serializeQueryArgs, reducerPath = _e.reducerPath;
+    return { buildQuerySelector: buildQuerySelector, buildMutationSelector: buildMutationSelector, selectInvalidatedBy: selectInvalidatedBy };
+    function withRequestFlags(substate) {
+        return __spreadValues(__spreadValues({}, substate), getRequestStatusFlags(substate.status));
+    }
+    function selectInternalState(rootState) {
+        var state = rootState[reducerPath];
+        if (true) {
+            if (!state) {
+                if (selectInternalState.triggered)
+                    return state;
+                selectInternalState.triggered = true;
+                console.error("Error: No data found at `state." + reducerPath + "`. Did you forget to add the reducer to the store?");
+            }
+        }
+        return state;
+    }
+    function buildQuerySelector(endpointName, endpointDefinition) {
+        return function (queryArgs) {
+            var selectQuerySubState = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)(selectInternalState, function (internalState) {
+                var _a, _b;
+                return (_b = queryArgs === skipToken ? void 0 : (_a = internalState == null ? void 0 : internalState.queries) == null ? void 0 : _a[serializeQueryArgs({
+                    queryArgs: queryArgs,
+                    endpointDefinition: endpointDefinition,
+                    endpointName: endpointName
+                })]) != null ? _b : defaultQuerySubState;
+            });
+            return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)(selectQuerySubState, withRequestFlags);
+        };
+    }
+    function buildMutationSelector() {
+        return function (id) {
+            var _a;
+            var mutationId;
+            if (typeof id === "object") {
+                mutationId = (_a = getMutationCacheKey(id)) != null ? _a : skipToken;
+            }
+            else {
+                mutationId = id;
+            }
+            var selectMutationSubstate = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)(selectInternalState, function (internalState) {
+                var _a2, _b;
+                return (_b = mutationId === skipToken ? void 0 : (_a2 = internalState == null ? void 0 : internalState.mutations) == null ? void 0 : _a2[mutationId]) != null ? _b : defaultMutationSubState;
+            });
+            return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.createSelector)(selectMutationSubstate, withRequestFlags);
+        };
+    }
+    function selectInvalidatedBy(state, tags) {
+        var _a;
+        var apiState = state[reducerPath];
+        var toInvalidate = new Set();
+        for (var _i = 0, _e = tags.map(expandTagDescription); _i < _e.length; _i++) {
+            var tag = _e[_i];
+            var provided = apiState.provided[tag.type];
+            if (!provided) {
+                continue;
+            }
+            var invalidateSubscriptions = (_a = tag.id !== void 0 ? provided[tag.id] : flatten(Object.values(provided))) != null ? _a : [];
+            for (var _f = 0, invalidateSubscriptions_1 = invalidateSubscriptions; _f < invalidateSubscriptions_1.length; _f++) {
+                var invalidate = invalidateSubscriptions_1[_f];
+                toInvalidate.add(invalidate);
+            }
+        }
+        return flatten(Array.from(toInvalidate.values()).map(function (queryCacheKey) {
+            var querySubState = apiState.queries[queryCacheKey];
+            return querySubState ? [
+                {
+                    queryCacheKey: queryCacheKey,
+                    endpointName: querySubState.endpointName,
+                    originalArgs: querySubState.originalArgs
+                }
+            ] : [];
+        }));
+    }
+}
+// src/query/defaultSerializeQueryArgs.ts
+
+var defaultSerializeQueryArgs = function (_e) {
+    var endpointName = _e.endpointName, queryArgs = _e.queryArgs;
+    return endpointName + "(" + JSON.stringify(queryArgs, function (key, value) { return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPlainObject)(value) ? Object.keys(value).sort().reduce(function (acc, key2) {
+        acc[key2] = value[key2];
+        return acc;
+    }, {}) : value; }) + ")";
+};
+// src/query/createApi.ts
+
+
+function buildCreateApi() {
+    var modules = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        modules[_i] = arguments[_i];
+    }
+    return function baseCreateApi(options) {
+        var extractRehydrationInfo = (0,reselect__WEBPACK_IMPORTED_MODULE_4__.defaultMemoize)(function (action) {
+            var _a, _b;
+            return (_b = options.extractRehydrationInfo) == null ? void 0 : _b.call(options, action, {
+                reducerPath: (_a = options.reducerPath) != null ? _a : "api"
+            });
+        });
+        var optionsWithDefaults = __spreadProps(__spreadValues({
+            reducerPath: "api",
+            serializeQueryArgs: defaultSerializeQueryArgs,
+            keepUnusedDataFor: 60,
+            refetchOnMountOrArgChange: false,
+            refetchOnFocus: false,
+            refetchOnReconnect: false
+        }, options), {
+            extractRehydrationInfo: extractRehydrationInfo,
+            tagTypes: __spreadArray([], options.tagTypes || [])
+        });
+        var context = {
+            endpointDefinitions: {},
+            batch: function (fn) {
+                fn();
+            },
+            apiUid: (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.nanoid)(),
+            extractRehydrationInfo: extractRehydrationInfo,
+            hasRehydrationInfo: (0,reselect__WEBPACK_IMPORTED_MODULE_4__.defaultMemoize)(function (action) { return extractRehydrationInfo(action) != null; })
+        };
+        var api = {
+            injectEndpoints: injectEndpoints,
+            enhanceEndpoints: function (_e) {
+                var addTagTypes = _e.addTagTypes, endpoints = _e.endpoints;
+                if (addTagTypes) {
+                    for (var _i = 0, addTagTypes_1 = addTagTypes; _i < addTagTypes_1.length; _i++) {
+                        var eT = addTagTypes_1[_i];
+                        if (!optionsWithDefaults.tagTypes.includes(eT)) {
+                            optionsWithDefaults.tagTypes.push(eT);
+                        }
+                    }
+                }
+                if (endpoints) {
+                    for (var _f = 0, _g = Object.entries(endpoints); _f < _g.length; _f++) {
+                        var _h = _g[_f], endpointName = _h[0], partialDefinition = _h[1];
+                        if (typeof partialDefinition === "function") {
+                            partialDefinition(context.endpointDefinitions[endpointName]);
+                        }
+                        else {
+                            Object.assign(context.endpointDefinitions[endpointName] || {}, partialDefinition);
+                        }
+                    }
+                }
+                return api;
+            }
+        };
+        var initializedModules = modules.map(function (m) { return m.init(api, optionsWithDefaults, context); });
+        function injectEndpoints(inject) {
+            var evaluatedEndpoints = inject.endpoints({
+                query: function (x) { return __spreadProps(__spreadValues({}, x), { type: DefinitionType.query }); },
+                mutation: function (x) { return __spreadProps(__spreadValues({}, x), { type: DefinitionType.mutation }); }
+            });
+            for (var _i = 0, _e = Object.entries(evaluatedEndpoints); _i < _e.length; _i++) {
+                var _f = _e[_i], endpointName = _f[0], definition = _f[1];
+                if (!inject.overrideExisting && endpointName in context.endpointDefinitions) {
+                    if (typeof process !== "undefined" && "development" === "development") {
+                        console.error("called `injectEndpoints` to override already-existing endpointName " + endpointName + " without specifying `overrideExisting: true`");
+                    }
+                    continue;
+                }
+                context.endpointDefinitions[endpointName] = definition;
+                for (var _g = 0, initializedModules_1 = initializedModules; _g < initializedModules_1.length; _g++) {
+                    var m = initializedModules_1[_g];
+                    m.injectEndpoint(endpointName, definition);
+                }
+            }
+            return api;
+        }
+        return api.injectEndpoints({ endpoints: options.endpoints });
+    };
+}
+// src/query/fakeBaseQuery.ts
+function fakeBaseQuery() {
+    return function () {
+        throw new Error("When using `fakeBaseQuery`, all queries & mutations must use the `queryFn` definition syntax.");
+    };
+}
+// src/query/core/buildMiddleware/index.ts
+
+
+// src/query/core/buildMiddleware/cacheCollection.ts
+var THIRTY_TWO_BIT_MAX_TIMER_SECONDS = 2147483647 / 1e3 - 1;
+var build = function (_e) {
+    var reducerPath = _e.reducerPath, api = _e.api, context = _e.context;
+    var _f = api.internalActions, removeQueryResult = _f.removeQueryResult, unsubscribeQueryResult = _f.unsubscribeQueryResult;
+    return function (mwApi) {
+        var currentRemovalTimeouts = {};
+        return function (next) { return function (action) {
+            var _a;
+            var result = next(action);
+            if (unsubscribeQueryResult.match(action)) {
+                var state = mwApi.getState()[reducerPath];
+                var queryCacheKey = action.payload.queryCacheKey;
+                handleUnsubscribe(queryCacheKey, (_a = state.queries[queryCacheKey]) == null ? void 0 : _a.endpointName, mwApi, state.config);
+            }
+            if (api.util.resetApiState.match(action)) {
+                for (var _i = 0, _e = Object.entries(currentRemovalTimeouts); _i < _e.length; _i++) {
+                    var _f = _e[_i], key = _f[0], timeout = _f[1];
+                    if (timeout)
+                        clearTimeout(timeout);
+                    delete currentRemovalTimeouts[key];
+                }
+            }
+            if (context.hasRehydrationInfo(action)) {
+                var state = mwApi.getState()[reducerPath];
+                var queries = context.extractRehydrationInfo(action).queries;
+                for (var _g = 0, _h = Object.entries(queries); _g < _h.length; _g++) {
+                    var _j = _h[_g], queryCacheKey = _j[0], queryState = _j[1];
+                    handleUnsubscribe(queryCacheKey, queryState == null ? void 0 : queryState.endpointName, mwApi, state.config);
+                }
+            }
+            return result;
+        }; };
+        function handleUnsubscribe(queryCacheKey, endpointName, api2, config) {
+            var _a;
+            var endpointDefinition = context.endpointDefinitions[endpointName];
+            var keepUnusedDataFor = (_a = endpointDefinition == null ? void 0 : endpointDefinition.keepUnusedDataFor) != null ? _a : config.keepUnusedDataFor;
+            var finalKeepUnusedDataFor = Math.max(0, Math.min(keepUnusedDataFor, THIRTY_TWO_BIT_MAX_TIMER_SECONDS));
+            var currentTimeout = currentRemovalTimeouts[queryCacheKey];
+            if (currentTimeout) {
+                clearTimeout(currentTimeout);
+            }
+            currentRemovalTimeouts[queryCacheKey] = setTimeout(function () {
+                var subscriptions = api2.getState()[reducerPath].subscriptions[queryCacheKey];
+                if (!subscriptions || Object.keys(subscriptions).length === 0) {
+                    api2.dispatch(removeQueryResult({ queryCacheKey: queryCacheKey }));
+                }
+                delete currentRemovalTimeouts[queryCacheKey];
+            }, finalKeepUnusedDataFor * 1e3);
+        }
+    };
+};
+// src/query/core/buildMiddleware/invalidationByTags.ts
+
+var build2 = function (_e) {
+    var reducerPath = _e.reducerPath, context = _e.context, endpointDefinitions = _e.context.endpointDefinitions, mutationThunk = _e.mutationThunk, api = _e.api, assertTagType = _e.assertTagType, refetchQuery = _e.refetchQuery;
+    var removeQueryResult = api.internalActions.removeQueryResult;
+    return function (mwApi) { return function (next) { return function (action) {
+        var result = next(action);
+        if ((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAnyOf)((0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(mutationThunk), (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isRejectedWithValue)(mutationThunk))(action)) {
+            invalidateTags(calculateProvidedByThunk(action, "invalidatesTags", endpointDefinitions, assertTagType), mwApi);
+        }
+        if (api.util.invalidateTags.match(action)) {
+            invalidateTags(calculateProvidedBy(action.payload, void 0, void 0, void 0, void 0, assertTagType), mwApi);
+        }
+        return result;
+    }; }; };
+    function invalidateTags(tags, mwApi) {
+        var rootState = mwApi.getState();
+        var state = rootState[reducerPath];
+        var toInvalidate = api.util.selectInvalidatedBy(rootState, tags);
+        context.batch(function () {
+            var valuesArray = Array.from(toInvalidate.values());
+            for (var _i = 0, valuesArray_1 = valuesArray; _i < valuesArray_1.length; _i++) {
+                var queryCacheKey = valuesArray_1[_i].queryCacheKey;
+                var querySubState = state.queries[queryCacheKey];
+                var subscriptionSubState = state.subscriptions[queryCacheKey];
+                if (querySubState && subscriptionSubState) {
+                    if (Object.keys(subscriptionSubState).length === 0) {
+                        mwApi.dispatch(removeQueryResult({
+                            queryCacheKey: queryCacheKey
+                        }));
+                    }
+                    else if (querySubState.status !== QueryStatus.uninitialized) {
+                        mwApi.dispatch(refetchQuery(querySubState, queryCacheKey));
+                    }
+                    else {
+                    }
+                }
+            }
+        });
+    }
+};
+// src/query/core/buildMiddleware/polling.ts
+var build3 = function (_e) {
+    var reducerPath = _e.reducerPath, queryThunk = _e.queryThunk, api = _e.api, refetchQuery = _e.refetchQuery;
+    return function (mwApi) {
+        var currentPolls = {};
+        return function (next) { return function (action) {
+            var result = next(action);
+            if (api.internalActions.updateSubscriptionOptions.match(action) || api.internalActions.unsubscribeQueryResult.match(action)) {
+                updatePollingInterval(action.payload, mwApi);
+            }
+            if (queryThunk.pending.match(action) || queryThunk.rejected.match(action) && action.meta.condition) {
+                updatePollingInterval(action.meta.arg, mwApi);
+            }
+            if (queryThunk.fulfilled.match(action) || queryThunk.rejected.match(action) && !action.meta.condition) {
+                startNextPoll(action.meta.arg, mwApi);
+            }
+            if (api.util.resetApiState.match(action)) {
+                clearPolls();
+            }
+            return result;
+        }; };
+        function startNextPoll(_e, api2) {
+            var queryCacheKey = _e.queryCacheKey;
+            var state = api2.getState()[reducerPath];
+            var querySubState = state.queries[queryCacheKey];
+            var subscriptions = state.subscriptions[queryCacheKey];
+            if (!querySubState || querySubState.status === QueryStatus.uninitialized)
+                return;
+            var lowestPollingInterval = findLowestPollingInterval(subscriptions);
+            if (!Number.isFinite(lowestPollingInterval))
+                return;
+            var currentPoll = currentPolls[queryCacheKey];
+            if (currentPoll == null ? void 0 : currentPoll.timeout) {
+                clearTimeout(currentPoll.timeout);
+                currentPoll.timeout = void 0;
+            }
+            var nextPollTimestamp = Date.now() + lowestPollingInterval;
+            var currentInterval = currentPolls[queryCacheKey] = {
+                nextPollTimestamp: nextPollTimestamp,
+                pollingInterval: lowestPollingInterval,
+                timeout: setTimeout(function () {
+                    currentInterval.timeout = void 0;
+                    api2.dispatch(refetchQuery(querySubState, queryCacheKey));
+                }, lowestPollingInterval)
+            };
+        }
+        function updatePollingInterval(_e, api2) {
+            var queryCacheKey = _e.queryCacheKey;
+            var state = api2.getState()[reducerPath];
+            var querySubState = state.queries[queryCacheKey];
+            var subscriptions = state.subscriptions[queryCacheKey];
+            if (!querySubState || querySubState.status === QueryStatus.uninitialized) {
+                return;
+            }
+            var lowestPollingInterval = findLowestPollingInterval(subscriptions);
+            if (!Number.isFinite(lowestPollingInterval)) {
+                cleanupPollForKey(queryCacheKey);
+                return;
+            }
+            var currentPoll = currentPolls[queryCacheKey];
+            var nextPollTimestamp = Date.now() + lowestPollingInterval;
+            if (!currentPoll || nextPollTimestamp < currentPoll.nextPollTimestamp) {
+                startNextPoll({ queryCacheKey: queryCacheKey }, api2);
+            }
+        }
+        function cleanupPollForKey(key) {
+            var existingPoll = currentPolls[key];
+            if (existingPoll == null ? void 0 : existingPoll.timeout) {
+                clearTimeout(existingPoll.timeout);
+            }
+            delete currentPolls[key];
+        }
+        function clearPolls() {
+            for (var _i = 0, _e = Object.keys(currentPolls); _i < _e.length; _i++) {
+                var key = _e[_i];
+                cleanupPollForKey(key);
+            }
+        }
+    };
+    function findLowestPollingInterval(subscribers) {
+        if (subscribers === void 0) { subscribers = {}; }
+        var lowestPollingInterval = Number.POSITIVE_INFINITY;
+        for (var _i = 0, _e = Object.values(subscribers); _i < _e.length; _i++) {
+            var subscription = _e[_i];
+            if (!!subscription.pollingInterval)
+                lowestPollingInterval = Math.min(subscription.pollingInterval, lowestPollingInterval);
+        }
+        return lowestPollingInterval;
+    }
+};
+// src/query/core/buildMiddleware/windowEventHandling.ts
+var build4 = function (_e) {
+    var reducerPath = _e.reducerPath, context = _e.context, api = _e.api, refetchQuery = _e.refetchQuery;
+    var removeQueryResult = api.internalActions.removeQueryResult;
+    return function (mwApi) { return function (next) { return function (action) {
+        var result = next(action);
+        if (onFocus.match(action)) {
+            refetchValidQueries(mwApi, "refetchOnFocus");
+        }
+        if (onOnline.match(action)) {
+            refetchValidQueries(mwApi, "refetchOnReconnect");
+        }
+        return result;
+    }; }; };
+    function refetchValidQueries(api2, type) {
+        var state = api2.getState()[reducerPath];
+        var queries = state.queries;
+        var subscriptions = state.subscriptions;
+        context.batch(function () {
+            for (var _i = 0, _e = Object.keys(subscriptions); _i < _e.length; _i++) {
+                var queryCacheKey = _e[_i];
+                var querySubState = queries[queryCacheKey];
+                var subscriptionSubState = subscriptions[queryCacheKey];
+                if (!subscriptionSubState || !querySubState)
+                    continue;
+                var shouldRefetch = Object.values(subscriptionSubState).some(function (sub) { return sub[type] === true; }) || Object.values(subscriptionSubState).every(function (sub) { return sub[type] === void 0; }) && state.config[type];
+                if (shouldRefetch) {
+                    if (Object.keys(subscriptionSubState).length === 0) {
+                        api2.dispatch(removeQueryResult({
+                            queryCacheKey: queryCacheKey
+                        }));
+                    }
+                    else if (querySubState.status !== QueryStatus.uninitialized) {
+                        api2.dispatch(refetchQuery(querySubState, queryCacheKey));
+                    }
+                }
+            }
+        });
+    }
+};
+// src/query/core/buildMiddleware/cacheLifecycle.ts
+
+var neverResolvedError = new Error("Promise never resolved before cacheEntryRemoved.");
+var build5 = function (_e) {
+    var api = _e.api, reducerPath = _e.reducerPath, context = _e.context, queryThunk = _e.queryThunk, mutationThunk = _e.mutationThunk;
+    var isQueryThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAsyncThunkAction)(queryThunk);
+    var isMutationThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isAsyncThunkAction)(mutationThunk);
+    var isFullfilledThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(queryThunk, mutationThunk);
+    return function (mwApi) {
+        var lifecycleMap = {};
+        return function (next) { return function (action) {
+            var stateBefore = mwApi.getState();
+            var result = next(action);
+            var cacheKey = getCacheKey(action);
+            if (queryThunk.pending.match(action)) {
+                var oldState = stateBefore[reducerPath].queries[cacheKey];
+                var state = mwApi.getState()[reducerPath].queries[cacheKey];
+                if (!oldState && state) {
+                    handleNewKey(action.meta.arg.endpointName, action.meta.arg.originalArgs, cacheKey, mwApi, action.meta.requestId);
+                }
+            }
+            else if (mutationThunk.pending.match(action)) {
+                var state = mwApi.getState()[reducerPath].mutations[cacheKey];
+                if (state) {
+                    handleNewKey(action.meta.arg.endpointName, action.meta.arg.originalArgs, cacheKey, mwApi, action.meta.requestId);
+                }
+            }
+            else if (isFullfilledThunk(action)) {
+                var lifecycle = lifecycleMap[cacheKey];
+                if (lifecycle == null ? void 0 : lifecycle.valueResolved) {
+                    lifecycle.valueResolved({
+                        data: action.payload,
+                        meta: action.meta.baseQueryMeta
+                    });
+                    delete lifecycle.valueResolved;
+                }
+            }
+            else if (api.internalActions.removeQueryResult.match(action) || api.internalActions.removeMutationResult.match(action)) {
+                var lifecycle = lifecycleMap[cacheKey];
+                if (lifecycle) {
+                    delete lifecycleMap[cacheKey];
+                    lifecycle.cacheEntryRemoved();
+                }
+            }
+            else if (api.util.resetApiState.match(action)) {
+                for (var _i = 0, _e = Object.entries(lifecycleMap); _i < _e.length; _i++) {
+                    var _f = _e[_i], cacheKey2 = _f[0], lifecycle = _f[1];
+                    delete lifecycleMap[cacheKey2];
+                    lifecycle.cacheEntryRemoved();
+                }
+            }
+            return result;
+        }; };
+        function getCacheKey(action) {
+            if (isQueryThunk(action))
+                return action.meta.arg.queryCacheKey;
+            if (isMutationThunk(action))
+                return action.meta.requestId;
+            if (api.internalActions.removeQueryResult.match(action))
+                return action.payload.queryCacheKey;
+            if (api.internalActions.removeMutationResult.match(action))
+                return getMutationCacheKey(action.payload);
+            return "";
+        }
+        function handleNewKey(endpointName, originalArgs, queryCacheKey, mwApi2, requestId) {
+            var endpointDefinition = context.endpointDefinitions[endpointName];
+            var onCacheEntryAdded = endpointDefinition == null ? void 0 : endpointDefinition.onCacheEntryAdded;
+            if (!onCacheEntryAdded)
+                return;
+            var lifecycle = {};
+            var cacheEntryRemoved = new Promise(function (resolve) {
+                lifecycle.cacheEntryRemoved = resolve;
+            });
+            var cacheDataLoaded = Promise.race([
+                new Promise(function (resolve) {
+                    lifecycle.valueResolved = resolve;
+                }),
+                cacheEntryRemoved.then(function () {
+                    throw neverResolvedError;
+                })
+            ]);
+            cacheDataLoaded.catch(function () {
+            });
+            lifecycleMap[queryCacheKey] = lifecycle;
+            var selector = api.endpoints[endpointName].select(endpointDefinition.type === DefinitionType.query ? originalArgs : queryCacheKey);
+            var extra = mwApi2.dispatch(function (_, __, extra2) { return extra2; });
+            var lifecycleApi = __spreadProps(__spreadValues({}, mwApi2), {
+                getCacheEntry: function () { return selector(mwApi2.getState()); },
+                requestId: requestId,
+                extra: extra,
+                updateCachedData: endpointDefinition.type === DefinitionType.query ? function (updateRecipe) { return mwApi2.dispatch(api.util.updateQueryData(endpointName, originalArgs, updateRecipe)); } : void 0,
+                cacheDataLoaded: cacheDataLoaded,
+                cacheEntryRemoved: cacheEntryRemoved
+            });
+            var runningHandler = onCacheEntryAdded(originalArgs, lifecycleApi);
+            Promise.resolve(runningHandler).catch(function (e) {
+                if (e === neverResolvedError)
+                    return;
+                throw e;
+            });
+        }
+    };
+};
+// src/query/core/buildMiddleware/queryLifecycle.ts
+
+var build6 = function (_e) {
+    var api = _e.api, context = _e.context, queryThunk = _e.queryThunk, mutationThunk = _e.mutationThunk;
+    var isPendingThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isPending)(queryThunk, mutationThunk);
+    var isRejectedThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isRejected)(queryThunk, mutationThunk);
+    var isFullfilledThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.isFulfilled)(queryThunk, mutationThunk);
+    return function (mwApi) {
+        var lifecycleMap = {};
+        return function (next) { return function (action) {
+            var _a, _b, _c;
+            var result = next(action);
+            if (isPendingThunk(action)) {
+                var _e = action.meta, requestId = _e.requestId, _f = _e.arg, endpointName_1 = _f.endpointName, originalArgs_1 = _f.originalArgs;
+                var endpointDefinition = context.endpointDefinitions[endpointName_1];
+                var onQueryStarted = endpointDefinition == null ? void 0 : endpointDefinition.onQueryStarted;
+                if (onQueryStarted) {
+                    var lifecycle_1 = {};
+                    var queryFulfilled = new Promise(function (resolve, reject) {
+                        lifecycle_1.resolve = resolve;
+                        lifecycle_1.reject = reject;
+                    });
+                    queryFulfilled.catch(function () {
+                    });
+                    lifecycleMap[requestId] = lifecycle_1;
+                    var selector_1 = api.endpoints[endpointName_1].select(endpointDefinition.type === DefinitionType.query ? originalArgs_1 : requestId);
+                    var extra = mwApi.dispatch(function (_, __, extra2) { return extra2; });
+                    var lifecycleApi = __spreadProps(__spreadValues({}, mwApi), {
+                        getCacheEntry: function () { return selector_1(mwApi.getState()); },
+                        requestId: requestId,
+                        extra: extra,
+                        updateCachedData: endpointDefinition.type === DefinitionType.query ? function (updateRecipe) { return mwApi.dispatch(api.util.updateQueryData(endpointName_1, originalArgs_1, updateRecipe)); } : void 0,
+                        queryFulfilled: queryFulfilled
+                    });
+                    onQueryStarted(originalArgs_1, lifecycleApi);
+                }
+            }
+            else if (isFullfilledThunk(action)) {
+                var _g = action.meta, requestId = _g.requestId, baseQueryMeta = _g.baseQueryMeta;
+                (_a = lifecycleMap[requestId]) == null ? void 0 : _a.resolve({
+                    data: action.payload,
+                    meta: baseQueryMeta
+                });
+                delete lifecycleMap[requestId];
+            }
+            else if (isRejectedThunk(action)) {
+                var _h = action.meta, requestId = _h.requestId, rejectedWithValue = _h.rejectedWithValue, baseQueryMeta = _h.baseQueryMeta;
+                (_c = lifecycleMap[requestId]) == null ? void 0 : _c.reject({
+                    error: (_b = action.payload) != null ? _b : action.error,
+                    isUnhandledError: !rejectedWithValue,
+                    meta: baseQueryMeta
+                });
+                delete lifecycleMap[requestId];
+            }
+            return result;
+        }; };
+    };
+};
+// src/query/core/buildMiddleware/devMiddleware.ts
+var build7 = function (_e) {
+    var api = _e.api, apiUid = _e.context.apiUid, reducerPath = _e.reducerPath;
+    return function (mwApi) {
+        var initialized2 = false;
+        return function (next) { return function (action) {
+            var _a, _b;
+            if (!initialized2) {
+                initialized2 = true;
+                mwApi.dispatch(api.internalActions.middlewareRegistered(apiUid));
+            }
+            var result = next(action);
+            if (api.util.resetApiState.match(action)) {
+                mwApi.dispatch(api.internalActions.middlewareRegistered(apiUid));
+            }
+            if (typeof process !== "undefined" && "development" === "development") {
+                if (api.internalActions.middlewareRegistered.match(action) && action.payload === apiUid && ((_b = (_a = mwApi.getState()[reducerPath]) == null ? void 0 : _a.config) == null ? void 0 : _b.middlewareRegistered) === "conflict") {
+                    console.warn("There is a mismatch between slice and middleware for the reducerPath \"" + reducerPath + "\".\nYou can only have one api per reducer path, this will lead to crashes in various situations!" + (reducerPath === "api" ? "\nIf you have multiple apis, you *have* to specify the reducerPath option when using createApi!" : ""));
+                }
+            }
+            return result;
+        }; };
+    };
+};
+// src/query/core/buildMiddleware/index.ts
+function buildMiddleware(input) {
+    var reducerPath = input.reducerPath, queryThunk = input.queryThunk;
+    var actions = {
+        invalidateTags: (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createAction)(reducerPath + "/invalidateTags")
+    };
+    var middlewares = [
+        build7,
+        build,
+        build2,
+        build3,
+        build4,
+        build5,
+        build6
+    ].map(function (build8) { return build8(__spreadProps(__spreadValues({}, input), {
+        refetchQuery: refetchQuery
+    })); });
+    var middleware = function (mwApi) { return function (next) {
+        var applied = _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.compose.apply(void 0, middlewares.map(function (middleware2) { return middleware2(mwApi); }))(next);
+        return function (action) {
+            if (mwApi.getState()[reducerPath]) {
+                return applied(action);
+            }
+            return next(action);
+        };
+    }; };
+    return { middleware: middleware, actions: actions };
+    function refetchQuery(querySubState, queryCacheKey, override) {
+        if (override === void 0) { override = {}; }
+        return queryThunk(__spreadValues({
+            type: "query",
+            endpointName: querySubState.endpointName,
+            originalArgs: querySubState.originalArgs,
+            subscribe: false,
+            forceRefetch: true,
+            queryCacheKey: queryCacheKey
+        }, override));
+    }
+}
+// src/query/core/buildInitiate.ts
+function buildInitiate(_e) {
+    var serializeQueryArgs = _e.serializeQueryArgs, queryThunk = _e.queryThunk, mutationThunk = _e.mutationThunk, api = _e.api, context = _e.context;
+    var runningQueries = {};
+    var runningMutations = {};
+    var _f = api.internalActions, unsubscribeQueryResult = _f.unsubscribeQueryResult, removeMutationResult = _f.removeMutationResult, updateSubscriptionOptions = _f.updateSubscriptionOptions;
+    return {
+        buildInitiateQuery: buildInitiateQuery,
+        buildInitiateMutation: buildInitiateMutation,
+        getRunningOperationPromises: getRunningOperationPromises,
+        getRunningOperationPromise: getRunningOperationPromise
+    };
+    function getRunningOperationPromise(endpointName, argOrRequestId) {
+        var endpointDefinition = context.endpointDefinitions[endpointName];
+        if (endpointDefinition.type === DefinitionType.query) {
+            var queryCacheKey = serializeQueryArgs({
+                queryArgs: argOrRequestId,
+                endpointDefinition: endpointDefinition,
+                endpointName: endpointName
+            });
+            return runningQueries[queryCacheKey];
+        }
+        else {
+            return runningMutations[argOrRequestId];
+        }
+    }
+    function getRunningOperationPromises() {
+        return __spreadArray(__spreadArray([], Object.values(runningQueries)), Object.values(runningMutations)).filter(function (t) { return !!t; });
+    }
+    function middlewareWarning(getState) {
+        var _a, _b;
+        if (true) {
+            if (middlewareWarning.triggered)
+                return;
+            var registered = (_b = (_a = getState()[api.reducerPath]) == null ? void 0 : _a.config) == null ? void 0 : _b.middlewareRegistered;
+            if (registered !== void 0) {
+                ;
+                middlewareWarning.triggered = true;
+            }
+            if (registered === false) {
+                console.warn("Warning: Middleware for RTK-Query API at reducerPath \"" + api.reducerPath + "\" has not been added to the store.\nFeatures like automatic cache collection, automatic refetching etc. will not be available.");
+            }
+        }
+    }
+    function buildInitiateQuery(endpointName, endpointDefinition) {
+        var queryAction = function (arg, _e) {
+            var _f = _e === void 0 ? {} : _e, _g = _f.subscribe, subscribe = _g === void 0 ? true : _g, forceRefetch = _f.forceRefetch, subscriptionOptions = _f.subscriptionOptions;
+            return function (dispatch, getState) {
+                var queryCacheKey = serializeQueryArgs({
+                    queryArgs: arg,
+                    endpointDefinition: endpointDefinition,
+                    endpointName: endpointName
+                });
+                var thunk = queryThunk({
+                    type: "query",
+                    subscribe: subscribe,
+                    forceRefetch: forceRefetch,
+                    subscriptionOptions: subscriptionOptions,
+                    endpointName: endpointName,
+                    originalArgs: arg,
+                    queryCacheKey: queryCacheKey
+                });
+                var thunkResult = dispatch(thunk);
+                middlewareWarning(getState);
+                var requestId = thunkResult.requestId, abort = thunkResult.abort;
+                var statePromise = Object.assign(Promise.all([runningQueries[queryCacheKey], thunkResult]).then(function () { return api.endpoints[endpointName].select(arg)(getState()); }), {
+                    arg: arg,
+                    requestId: requestId,
+                    subscriptionOptions: subscriptionOptions,
+                    queryCacheKey: queryCacheKey,
+                    abort: abort,
+                    unwrap: function () {
+                        return __async(this, null, function () {
+                            var result;
+                            return __generator(this, function (_e) {
+                                switch (_e.label) {
+                                    case 0: return [4 /*yield*/, statePromise];
+                                    case 1:
+                                        result = _e.sent();
+                                        if (result.isError) {
+                                            throw result.error;
+                                        }
+                                        return [2 /*return*/, result.data];
+                                }
+                            });
+                        });
+                    },
+                    refetch: function () {
+                        dispatch(queryAction(arg, { subscribe: false, forceRefetch: true }));
+                    },
+                    unsubscribe: function () {
+                        if (subscribe)
+                            dispatch(unsubscribeQueryResult({
+                                queryCacheKey: queryCacheKey,
+                                requestId: requestId
+                            }));
+                    },
+                    updateSubscriptionOptions: function (options) {
+                        statePromise.subscriptionOptions = options;
+                        dispatch(updateSubscriptionOptions({
+                            endpointName: endpointName,
+                            requestId: requestId,
+                            queryCacheKey: queryCacheKey,
+                            options: options
+                        }));
+                    }
+                });
+                if (!runningQueries[queryCacheKey]) {
+                    runningQueries[queryCacheKey] = statePromise;
+                    statePromise.then(function () {
+                        delete runningQueries[queryCacheKey];
+                    });
+                }
+                return statePromise;
+            };
+        };
+        return queryAction;
+    }
+    function buildInitiateMutation(endpointName) {
+        return function (arg, _e) {
+            var _f = _e === void 0 ? {} : _e, _g = _f.track, track = _g === void 0 ? true : _g, fixedCacheKey = _f.fixedCacheKey;
+            return function (dispatch, getState) {
+                var thunk = mutationThunk({
+                    type: "mutation",
+                    endpointName: endpointName,
+                    originalArgs: arg,
+                    track: track,
+                    fixedCacheKey: fixedCacheKey
+                });
+                var thunkResult = dispatch(thunk);
+                middlewareWarning(getState);
+                var requestId = thunkResult.requestId, abort = thunkResult.abort, unwrap = thunkResult.unwrap;
+                var returnValuePromise = thunkResult.unwrap().then(function (data) { return ({ data: data }); }).catch(function (error) { return ({ error: error }); });
+                var reset = function () {
+                    dispatch(removeMutationResult({ requestId: requestId, fixedCacheKey: fixedCacheKey }));
+                };
+                var ret = Object.assign(returnValuePromise, {
+                    arg: thunkResult.arg,
+                    requestId: requestId,
+                    abort: abort,
+                    unwrap: unwrap,
+                    unsubscribe: reset,
+                    reset: reset
+                });
+                runningMutations[requestId] = ret;
+                ret.then(function () {
+                    delete runningMutations[requestId];
+                });
+                if (fixedCacheKey) {
+                    runningMutations[fixedCacheKey] = ret;
+                    ret.then(function () {
+                        if (runningMutations[fixedCacheKey] === ret)
+                            delete runningMutations[fixedCacheKey];
+                    });
+                }
+                return ret;
+            };
+        };
+    }
+}
+// src/query/tsHelpers.ts
+function assertCast(v) {
+}
+function safeAssign(target) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    Object.assign.apply(Object, __spreadArray([target], args));
+}
+// src/query/core/module.ts
+
+var coreModuleName = /* @__PURE__ */ Symbol();
+var coreModule = function () { return ({
+    name: coreModuleName,
+    init: function (api, _e, context) {
+        var baseQuery = _e.baseQuery, tagTypes = _e.tagTypes, reducerPath = _e.reducerPath, serializeQueryArgs = _e.serializeQueryArgs, keepUnusedDataFor = _e.keepUnusedDataFor, refetchOnMountOrArgChange = _e.refetchOnMountOrArgChange, refetchOnFocus = _e.refetchOnFocus, refetchOnReconnect = _e.refetchOnReconnect;
+        (0,immer__WEBPACK_IMPORTED_MODULE_1__.enablePatches)();
+        assertCast(serializeQueryArgs);
+        var assertTagType = function (tag) {
+            if (typeof process !== "undefined" && "development" === "development") {
+                if (!tagTypes.includes(tag.type)) {
+                    console.error("Tag type '" + tag.type + "' was used, but not specified in `tagTypes`!");
+                }
+            }
+            return tag;
+        };
+        Object.assign(api, {
+            reducerPath: reducerPath,
+            endpoints: {},
+            internalActions: {
+                onOnline: onOnline,
+                onOffline: onOffline,
+                onFocus: onFocus,
+                onFocusLost: onFocusLost
+            },
+            util: {}
+        });
+        var _f = buildThunks({
+            baseQuery: baseQuery,
+            reducerPath: reducerPath,
+            context: context,
+            api: api,
+            serializeQueryArgs: serializeQueryArgs
+        }), queryThunk = _f.queryThunk, mutationThunk = _f.mutationThunk, patchQueryData = _f.patchQueryData, updateQueryData = _f.updateQueryData, prefetch = _f.prefetch, buildMatchThunkActions = _f.buildMatchThunkActions;
+        var _g = buildSlice({
+            context: context,
+            queryThunk: queryThunk,
+            mutationThunk: mutationThunk,
+            reducerPath: reducerPath,
+            assertTagType: assertTagType,
+            config: {
+                refetchOnFocus: refetchOnFocus,
+                refetchOnReconnect: refetchOnReconnect,
+                refetchOnMountOrArgChange: refetchOnMountOrArgChange,
+                keepUnusedDataFor: keepUnusedDataFor,
+                reducerPath: reducerPath
+            }
+        }), reducer = _g.reducer, sliceActions = _g.actions;
+        safeAssign(api.util, {
+            patchQueryData: patchQueryData,
+            updateQueryData: updateQueryData,
+            prefetch: prefetch,
+            resetApiState: sliceActions.resetApiState
+        });
+        safeAssign(api.internalActions, sliceActions);
+        Object.defineProperty(api.util, "updateQueryResult", {
+            get: function () {
+                if (typeof process !== "undefined" && "development" === "development") {
+                    console.warn("`api.util.updateQueryResult` has been renamed to `api.util.updateQueryData`, please change your code accordingly");
+                }
+                return api.util.updateQueryData;
+            }
+        });
+        Object.defineProperty(api.util, "patchQueryResult", {
+            get: function () {
+                if (typeof process !== "undefined" && "development" === "development") {
+                    console.warn("`api.util.patchQueryResult` has been renamed to `api.util.patchQueryData`, please change your code accordingly");
+                }
+                return api.util.patchQueryData;
+            }
+        });
+        var _h = buildMiddleware({
+            reducerPath: reducerPath,
+            context: context,
+            queryThunk: queryThunk,
+            mutationThunk: mutationThunk,
+            api: api,
+            assertTagType: assertTagType
+        }), middleware = _h.middleware, middlewareActions = _h.actions;
+        safeAssign(api.util, middlewareActions);
+        safeAssign(api, { reducer: reducer, middleware: middleware });
+        var _j = buildSelectors({
+            serializeQueryArgs: serializeQueryArgs,
+            reducerPath: reducerPath
+        }), buildQuerySelector = _j.buildQuerySelector, buildMutationSelector = _j.buildMutationSelector, selectInvalidatedBy = _j.selectInvalidatedBy;
+        safeAssign(api.util, { selectInvalidatedBy: selectInvalidatedBy });
+        var _k = buildInitiate({
+            queryThunk: queryThunk,
+            mutationThunk: mutationThunk,
+            api: api,
+            serializeQueryArgs: serializeQueryArgs,
+            context: context
+        }), buildInitiateQuery = _k.buildInitiateQuery, buildInitiateMutation = _k.buildInitiateMutation, getRunningOperationPromises = _k.getRunningOperationPromises, getRunningOperationPromise = _k.getRunningOperationPromise;
+        safeAssign(api.util, {
+            getRunningOperationPromises: getRunningOperationPromises,
+            getRunningOperationPromise: getRunningOperationPromise
+        });
+        return {
+            name: coreModuleName,
+            injectEndpoint: function (endpointName, definition) {
+                var _a, _b;
+                var anyApi = api;
+                (_b = (_a = anyApi.endpoints)[endpointName]) != null ? _b : _a[endpointName] = {};
+                if (isQueryDefinition(definition)) {
+                    safeAssign(anyApi.endpoints[endpointName], {
+                        select: buildQuerySelector(endpointName, definition),
+                        initiate: buildInitiateQuery(endpointName, definition)
+                    }, buildMatchThunkActions(queryThunk, endpointName));
+                }
+                else if (isMutationDefinition(definition)) {
+                    safeAssign(anyApi.endpoints[endpointName], {
+                        select: buildMutationSelector(),
+                        initiate: buildInitiateMutation(endpointName)
+                    }, buildMatchThunkActions(mutationThunk, endpointName));
+                }
+            }
+        };
+    }
+}); };
+// src/query/core/index.ts
+var createApi = /* @__PURE__ */ buildCreateApi(coreModule());
+
+//# sourceMappingURL=rtk-query.esm.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js ***!
@@ -1838,2467 +4643,6 @@ function createListenerMiddleware(middlewareOptions) {
 
 /***/ }),
 
-/***/ "./node_modules/axios/index.js":
-/*!*************************************!*\
-  !*** ./node_modules/axios/index.js ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/lib/axios.js");
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/adapters/xhr.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/adapters/xhr.js ***!
-  \************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var settle = __webpack_require__(/*! ./../core/settle */ "./node_modules/axios/lib/core/settle.js");
-var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
-var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
-var buildFullPath = __webpack_require__(/*! ../core/buildFullPath */ "./node_modules/axios/lib/core/buildFullPath.js");
-var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
-var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
-var transitionalDefaults = __webpack_require__(/*! ../defaults/transitional */ "./node_modules/axios/lib/defaults/transitional.js");
-var AxiosError = __webpack_require__(/*! ../core/AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-var CanceledError = __webpack_require__(/*! ../cancel/CanceledError */ "./node_modules/axios/lib/cancel/CanceledError.js");
-var parseProtocol = __webpack_require__(/*! ../helpers/parseProtocol */ "./node_modules/axios/lib/helpers/parseProtocol.js");
-
-module.exports = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-    var responseType = config.responseType;
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-
-      if (config.signal) {
-        config.signal.removeEventListener('abort', onCanceled);
-      }
-    }
-
-    if (utils.isFormData(requestData) && utils.isStandardBrowserEnv()) {
-      delete requestHeaders['Content-Type']; // Let the browser set it
-    }
-
-    var request = new XMLHttpRequest();
-
-    // HTTP basic authentication
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
-      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-    }
-
-    var fullPath = buildFullPath(config.baseURL, config.url);
-
-    request.open(config.method.toUpperCase(), buildURL(fullPath, config.params, config.paramsSerializer), true);
-
-    // Set the request timeout in MS
-    request.timeout = config.timeout;
-
-    function onloadend() {
-      if (!request) {
-        return;
-      }
-      // Prepare the response
-      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !responseType || responseType === 'text' ||  responseType === 'json' ?
-        request.responseText : request.response;
-      var response = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
-      };
-
-      settle(function _resolve(value) {
-        resolve(value);
-        done();
-      }, function _reject(err) {
-        reject(err);
-        done();
-      }, response);
-
-      // Clean up request
-      request = null;
-    }
-
-    if ('onloadend' in request) {
-      // Use onloadend if available
-      request.onloadend = onloadend;
-    } else {
-      // Listen for ready state to emulate onloadend
-      request.onreadystatechange = function handleLoad() {
-        if (!request || request.readyState !== 4) {
-          return;
-        }
-
-        // The request errored out and we didn't get a response, this will be
-        // handled by onerror instead
-        // With one exception: request that using file: protocol, most browsers
-        // will return status as 0 even though it's a successful request
-        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-          return;
-        }
-        // readystate handler is calling before onerror or ontimeout handlers,
-        // so we should call onloadend on the next 'tick'
-        setTimeout(onloadend);
-      };
-    }
-
-    // Handle browser request cancellation (as opposed to a manual cancellation)
-    request.onabort = function handleAbort() {
-      if (!request) {
-        return;
-      }
-
-      reject(new AxiosError('Request aborted', AxiosError.ECONNABORTED, config, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle low level network errors
-    request.onerror = function handleError() {
-      // Real errors are hidden from us by the browser
-      // onerror should only fire if it's a network error
-      reject(new AxiosError('Network Error', AxiosError.ERR_NETWORK, config, request, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle timeout
-    request.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-      var transitional = config.transitional || transitionalDefaults;
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
-      }
-      reject(new AxiosError(
-        timeoutErrorMessage,
-        transitional.clarifyTimeoutError ? AxiosError.ETIMEDOUT : AxiosError.ECONNABORTED,
-        config,
-        request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (utils.isStandardBrowserEnv()) {
-      // Add xsrf header
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
-        cookies.read(config.xsrfCookieName) :
-        undefined;
-
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-
-    // Add headers to the request
-    if ('setRequestHeader' in request) {
-      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-          // Remove Content-Type if data is undefined
-          delete requestHeaders[key];
-        } else {
-          // Otherwise add header to the request
-          request.setRequestHeader(key, val);
-        }
-      });
-    }
-
-    // Add withCredentials to request if needed
-    if (!utils.isUndefined(config.withCredentials)) {
-      request.withCredentials = !!config.withCredentials;
-    }
-
-    // Add responseType to request if needed
-    if (responseType && responseType !== 'json') {
-      request.responseType = config.responseType;
-    }
-
-    // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', config.onDownloadProgress);
-    }
-
-    // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', config.onUploadProgress);
-    }
-
-    if (config.cancelToken || config.signal) {
-      // Handle cancellation
-      // eslint-disable-next-line func-names
-      onCanceled = function(cancel) {
-        if (!request) {
-          return;
-        }
-        reject(!cancel || (cancel && cancel.type) ? new CanceledError() : cancel);
-        request.abort();
-        request = null;
-      };
-
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
-      }
-    }
-
-    if (!requestData) {
-      requestData = null;
-    }
-
-    var protocol = parseProtocol(fullPath);
-
-    if (protocol && [ 'http', 'https', 'file' ].indexOf(protocol) === -1) {
-      reject(new AxiosError('Unsupported protocol ' + protocol + ':', AxiosError.ERR_BAD_REQUEST, config));
-      return;
-    }
-
-
-    // Send the request
-    request.send(requestData);
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/axios.js":
-/*!*****************************************!*\
-  !*** ./node_modules/axios/lib/axios.js ***!
-  \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
-var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var Axios = __webpack_require__(/*! ./core/Axios */ "./node_modules/axios/lib/core/Axios.js");
-var mergeConfig = __webpack_require__(/*! ./core/mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
-var defaults = __webpack_require__(/*! ./defaults */ "./node_modules/axios/lib/defaults/index.js");
-
-/**
- * Create an instance of Axios
- *
- * @param {Object} defaultConfig The default config for the instance
- * @return {Axios} A new instance of Axios
- */
-function createInstance(defaultConfig) {
-  var context = new Axios(defaultConfig);
-  var instance = bind(Axios.prototype.request, context);
-
-  // Copy axios.prototype to instance
-  utils.extend(instance, Axios.prototype, context);
-
-  // Copy context to instance
-  utils.extend(instance, context);
-
-  // Factory for creating new instances
-  instance.create = function create(instanceConfig) {
-    return createInstance(mergeConfig(defaultConfig, instanceConfig));
-  };
-
-  return instance;
-}
-
-// Create the default instance to be exported
-var axios = createInstance(defaults);
-
-// Expose Axios class to allow class inheritance
-axios.Axios = Axios;
-
-// Expose Cancel & CancelToken
-axios.CanceledError = __webpack_require__(/*! ./cancel/CanceledError */ "./node_modules/axios/lib/cancel/CanceledError.js");
-axios.CancelToken = __webpack_require__(/*! ./cancel/CancelToken */ "./node_modules/axios/lib/cancel/CancelToken.js");
-axios.isCancel = __webpack_require__(/*! ./cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-axios.VERSION = (__webpack_require__(/*! ./env/data */ "./node_modules/axios/lib/env/data.js").version);
-axios.toFormData = __webpack_require__(/*! ./helpers/toFormData */ "./node_modules/axios/lib/helpers/toFormData.js");
-
-// Expose AxiosError class
-axios.AxiosError = __webpack_require__(/*! ../lib/core/AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-
-// alias for CanceledError for backward compatibility
-axios.Cancel = axios.CanceledError;
-
-// Expose all/spread
-axios.all = function all(promises) {
-  return Promise.all(promises);
-};
-axios.spread = __webpack_require__(/*! ./helpers/spread */ "./node_modules/axios/lib/helpers/spread.js");
-
-// Expose isAxiosError
-axios.isAxiosError = __webpack_require__(/*! ./helpers/isAxiosError */ "./node_modules/axios/lib/helpers/isAxiosError.js");
-
-module.exports = axios;
-
-// Allow use of default import syntax in TypeScript
-module.exports["default"] = axios;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/CancelToken.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/CancelToken.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var CanceledError = __webpack_require__(/*! ./CanceledError */ "./node_modules/axios/lib/cancel/CanceledError.js");
-
-/**
- * A `CancelToken` is an object that can be used to request cancellation of an operation.
- *
- * @class
- * @param {Function} executor The executor function.
- */
-function CancelToken(executor) {
-  if (typeof executor !== 'function') {
-    throw new TypeError('executor must be a function.');
-  }
-
-  var resolvePromise;
-
-  this.promise = new Promise(function promiseExecutor(resolve) {
-    resolvePromise = resolve;
-  });
-
-  var token = this;
-
-  // eslint-disable-next-line func-names
-  this.promise.then(function(cancel) {
-    if (!token._listeners) return;
-
-    var i;
-    var l = token._listeners.length;
-
-    for (i = 0; i < l; i++) {
-      token._listeners[i](cancel);
-    }
-    token._listeners = null;
-  });
-
-  // eslint-disable-next-line func-names
-  this.promise.then = function(onfulfilled) {
-    var _resolve;
-    // eslint-disable-next-line func-names
-    var promise = new Promise(function(resolve) {
-      token.subscribe(resolve);
-      _resolve = resolve;
-    }).then(onfulfilled);
-
-    promise.cancel = function reject() {
-      token.unsubscribe(_resolve);
-    };
-
-    return promise;
-  };
-
-  executor(function cancel(message) {
-    if (token.reason) {
-      // Cancellation has already been requested
-      return;
-    }
-
-    token.reason = new CanceledError(message);
-    resolvePromise(token.reason);
-  });
-}
-
-/**
- * Throws a `CanceledError` if cancellation has been requested.
- */
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-
-/**
- * Subscribe to the cancel signal
- */
-
-CancelToken.prototype.subscribe = function subscribe(listener) {
-  if (this.reason) {
-    listener(this.reason);
-    return;
-  }
-
-  if (this._listeners) {
-    this._listeners.push(listener);
-  } else {
-    this._listeners = [listener];
-  }
-};
-
-/**
- * Unsubscribe from the cancel signal
- */
-
-CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-  if (!this._listeners) {
-    return;
-  }
-  var index = this._listeners.indexOf(listener);
-  if (index !== -1) {
-    this._listeners.splice(index, 1);
-  }
-};
-
-/**
- * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
- */
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token: token,
-    cancel: cancel
-  };
-};
-
-module.exports = CancelToken;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/CanceledError.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/CanceledError.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var AxiosError = __webpack_require__(/*! ../core/AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * A `CanceledError` is an object that is thrown when an operation is canceled.
- *
- * @class
- * @param {string=} message The message.
- */
-function CanceledError(message) {
-  // eslint-disable-next-line no-eq-null,eqeqeq
-  AxiosError.call(this, message == null ? 'canceled' : message, AxiosError.ERR_CANCELED);
-  this.name = 'CanceledError';
-}
-
-utils.inherits(CanceledError, AxiosError, {
-  __CANCEL__: true
-});
-
-module.exports = CanceledError;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/cancel/isCancel.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios/lib/cancel/isCancel.js ***!
-  \***************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = function isCancel(value) {
-  return !!(value && value.__CANCEL__);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/Axios.js":
-/*!**********************************************!*\
-  !*** ./node_modules/axios/lib/core/Axios.js ***!
-  \**********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var buildURL = __webpack_require__(/*! ../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
-var InterceptorManager = __webpack_require__(/*! ./InterceptorManager */ "./node_modules/axios/lib/core/InterceptorManager.js");
-var dispatchRequest = __webpack_require__(/*! ./dispatchRequest */ "./node_modules/axios/lib/core/dispatchRequest.js");
-var mergeConfig = __webpack_require__(/*! ./mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
-var buildFullPath = __webpack_require__(/*! ./buildFullPath */ "./node_modules/axios/lib/core/buildFullPath.js");
-var validator = __webpack_require__(/*! ../helpers/validator */ "./node_modules/axios/lib/helpers/validator.js");
-
-var validators = validator.validators;
-/**
- * Create a new instance of Axios
- *
- * @param {Object} instanceConfig The default config for the instance
- */
-function Axios(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager(),
-    response: new InterceptorManager()
-  };
-}
-
-/**
- * Dispatch a request
- *
- * @param {Object} config The config specific for this request (merged with this.defaults)
- */
-Axios.prototype.request = function request(configOrUrl, config) {
-  /*eslint no-param-reassign:0*/
-  // Allow for axios('example/url'[, config]) a la fetch API
-  if (typeof configOrUrl === 'string') {
-    config = config || {};
-    config.url = configOrUrl;
-  } else {
-    config = configOrUrl || {};
-  }
-
-  config = mergeConfig(this.defaults, config);
-
-  // Set config.method
-  if (config.method) {
-    config.method = config.method.toLowerCase();
-  } else if (this.defaults.method) {
-    config.method = this.defaults.method.toLowerCase();
-  } else {
-    config.method = 'get';
-  }
-
-  var transitional = config.transitional;
-
-  if (transitional !== undefined) {
-    validator.assertOptions(transitional, {
-      silentJSONParsing: validators.transitional(validators.boolean),
-      forcedJSONParsing: validators.transitional(validators.boolean),
-      clarifyTimeoutError: validators.transitional(validators.boolean)
-    }, false);
-  }
-
-  // filter out skipped interceptors
-  var requestInterceptorChain = [];
-  var synchronousRequestInterceptors = true;
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
-      return;
-    }
-
-    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-
-    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  var responseInterceptorChain = [];
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-
-  var promise;
-
-  if (!synchronousRequestInterceptors) {
-    var chain = [dispatchRequest, undefined];
-
-    Array.prototype.unshift.apply(chain, requestInterceptorChain);
-    chain = chain.concat(responseInterceptorChain);
-
-    promise = Promise.resolve(config);
-    while (chain.length) {
-      promise = promise.then(chain.shift(), chain.shift());
-    }
-
-    return promise;
-  }
-
-
-  var newConfig = config;
-  while (requestInterceptorChain.length) {
-    var onFulfilled = requestInterceptorChain.shift();
-    var onRejected = requestInterceptorChain.shift();
-    try {
-      newConfig = onFulfilled(newConfig);
-    } catch (error) {
-      onRejected(error);
-      break;
-    }
-  }
-
-  try {
-    promise = dispatchRequest(newConfig);
-  } catch (error) {
-    return Promise.reject(error);
-  }
-
-  while (responseInterceptorChain.length) {
-    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
-  }
-
-  return promise;
-};
-
-Axios.prototype.getUri = function getUri(config) {
-  config = mergeConfig(this.defaults, config);
-  var fullPath = buildFullPath(config.baseURL, config.url);
-  return buildURL(fullPath, config.params, config.paramsSerializer);
-};
-
-// Provide aliases for supported request methods
-utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
-  /*eslint func-names:0*/
-  Axios.prototype[method] = function(url, config) {
-    return this.request(mergeConfig(config || {}, {
-      method: method,
-      url: url,
-      data: (config || {}).data
-    }));
-  };
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  /*eslint func-names:0*/
-
-  function generateHTTPMethod(isForm) {
-    return function httpMethod(url, data, config) {
-      return this.request(mergeConfig(config || {}, {
-        method: method,
-        headers: isForm ? {
-          'Content-Type': 'multipart/form-data'
-        } : {},
-        url: url,
-        data: data
-      }));
-    };
-  }
-
-  Axios.prototype[method] = generateHTTPMethod();
-
-  Axios.prototype[method + 'Form'] = generateHTTPMethod(true);
-});
-
-module.exports = Axios;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/AxiosError.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios/lib/core/AxiosError.js ***!
-  \***************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * Create an Error with the specified message, config, error code, request and response.
- *
- * @param {string} message The error message.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [config] The config.
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The created error.
- */
-function AxiosError(message, code, config, request, response) {
-  Error.call(this);
-  this.message = message;
-  this.name = 'AxiosError';
-  code && (this.code = code);
-  config && (this.config = config);
-  request && (this.request = request);
-  response && (this.response = response);
-}
-
-utils.inherits(AxiosError, Error, {
-  toJSON: function toJSON() {
-    return {
-      // Standard
-      message: this.message,
-      name: this.name,
-      // Microsoft
-      description: this.description,
-      number: this.number,
-      // Mozilla
-      fileName: this.fileName,
-      lineNumber: this.lineNumber,
-      columnNumber: this.columnNumber,
-      stack: this.stack,
-      // Axios
-      config: this.config,
-      code: this.code,
-      status: this.response && this.response.status ? this.response.status : null
-    };
-  }
-});
-
-var prototype = AxiosError.prototype;
-var descriptors = {};
-
-[
-  'ERR_BAD_OPTION_VALUE',
-  'ERR_BAD_OPTION',
-  'ECONNABORTED',
-  'ETIMEDOUT',
-  'ERR_NETWORK',
-  'ERR_FR_TOO_MANY_REDIRECTS',
-  'ERR_DEPRECATED',
-  'ERR_BAD_RESPONSE',
-  'ERR_BAD_REQUEST',
-  'ERR_CANCELED'
-// eslint-disable-next-line func-names
-].forEach(function(code) {
-  descriptors[code] = {value: code};
-});
-
-Object.defineProperties(AxiosError, descriptors);
-Object.defineProperty(prototype, 'isAxiosError', {value: true});
-
-// eslint-disable-next-line func-names
-AxiosError.from = function(error, code, config, request, response, customProps) {
-  var axiosError = Object.create(prototype);
-
-  utils.toFlatObject(error, axiosError, function filter(obj) {
-    return obj !== Error.prototype;
-  });
-
-  AxiosError.call(axiosError, error.message, code, config, request, response);
-
-  axiosError.name = error.name;
-
-  customProps && Object.assign(axiosError, customProps);
-
-  return axiosError;
-};
-
-module.exports = AxiosError;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/InterceptorManager.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/axios/lib/core/InterceptorManager.js ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-function InterceptorManager() {
-  this.handlers = [];
-}
-
-/**
- * Add a new interceptor to the stack
- *
- * @param {Function} fulfilled The function to handle `then` for a `Promise`
- * @param {Function} rejected The function to handle `reject` for a `Promise`
- *
- * @return {Number} An ID used to remove interceptor later
- */
-InterceptorManager.prototype.use = function use(fulfilled, rejected, options) {
-  this.handlers.push({
-    fulfilled: fulfilled,
-    rejected: rejected,
-    synchronous: options ? options.synchronous : false,
-    runWhen: options ? options.runWhen : null
-  });
-  return this.handlers.length - 1;
-};
-
-/**
- * Remove an interceptor from the stack
- *
- * @param {Number} id The ID that was returned by `use`
- */
-InterceptorManager.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-
-/**
- * Iterate over all the registered interceptors
- *
- * This method is particularly useful for skipping over any
- * interceptors that may have become `null` calling `eject`.
- *
- * @param {Function} fn The function to call for each interceptor
- */
-InterceptorManager.prototype.forEach = function forEach(fn) {
-  utils.forEach(this.handlers, function forEachHandler(h) {
-    if (h !== null) {
-      fn(h);
-    }
-  });
-};
-
-module.exports = InterceptorManager;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/buildFullPath.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/core/buildFullPath.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var isAbsoluteURL = __webpack_require__(/*! ../helpers/isAbsoluteURL */ "./node_modules/axios/lib/helpers/isAbsoluteURL.js");
-var combineURLs = __webpack_require__(/*! ../helpers/combineURLs */ "./node_modules/axios/lib/helpers/combineURLs.js");
-
-/**
- * Creates a new URL by combining the baseURL with the requestedURL,
- * only when the requestedURL is not already an absolute URL.
- * If the requestURL is absolute, this function returns the requestedURL untouched.
- *
- * @param {string} baseURL The base URL
- * @param {string} requestedURL Absolute or relative URL to combine
- * @returns {string} The combined full path
- */
-module.exports = function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
-    return combineURLs(baseURL, requestedURL);
-  }
-  return requestedURL;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/dispatchRequest.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/core/dispatchRequest.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var transformData = __webpack_require__(/*! ./transformData */ "./node_modules/axios/lib/core/transformData.js");
-var isCancel = __webpack_require__(/*! ../cancel/isCancel */ "./node_modules/axios/lib/cancel/isCancel.js");
-var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults/index.js");
-var CanceledError = __webpack_require__(/*! ../cancel/CanceledError */ "./node_modules/axios/lib/cancel/CanceledError.js");
-
-/**
- * Throws a `CanceledError` if cancellation has been requested.
- */
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-
-  if (config.signal && config.signal.aborted) {
-    throw new CanceledError();
-  }
-}
-
-/**
- * Dispatch a request to the server using the configured adapter.
- *
- * @param {object} config The config that is to be used for the request
- * @returns {Promise} The Promise to be fulfilled
- */
-module.exports = function dispatchRequest(config) {
-  throwIfCancellationRequested(config);
-
-  // Ensure headers exist
-  config.headers = config.headers || {};
-
-  // Transform request data
-  config.data = transformData.call(
-    config,
-    config.data,
-    config.headers,
-    config.transformRequest
-  );
-
-  // Flatten headers
-  config.headers = utils.merge(
-    config.headers.common || {},
-    config.headers[config.method] || {},
-    config.headers
-  );
-
-  utils.forEach(
-    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
-    function cleanHeaderConfig(method) {
-      delete config.headers[method];
-    }
-  );
-
-  var adapter = config.adapter || defaults.adapter;
-
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-
-    // Transform response data
-    response.data = transformData.call(
-      config,
-      response.data,
-      response.headers,
-      config.transformResponse
-    );
-
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
-      throwIfCancellationRequested(config);
-
-      // Transform response data
-      if (reason && reason.response) {
-        reason.response.data = transformData.call(
-          config,
-          reason.response.data,
-          reason.response.headers,
-          config.transformResponse
-        );
-      }
-    }
-
-    return Promise.reject(reason);
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/mergeConfig.js":
-/*!****************************************************!*\
-  !*** ./node_modules/axios/lib/core/mergeConfig.js ***!
-  \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * Config-specific merge-function which creates a new config-object
- * by merging two configuration objects together.
- *
- * @param {Object} config1
- * @param {Object} config2
- * @returns {Object} New object resulting from merging config2 to config1
- */
-module.exports = function mergeConfig(config1, config2) {
-  // eslint-disable-next-line no-param-reassign
-  config2 = config2 || {};
-  var config = {};
-
-  function getMergedValue(target, source) {
-    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
-      return utils.merge(target, source);
-    } else if (utils.isPlainObject(source)) {
-      return utils.merge({}, source);
-    } else if (utils.isArray(source)) {
-      return source.slice();
-    }
-    return source;
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDeepProperties(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function valueFromConfig2(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function defaultToConfig2(prop) {
-    if (!utils.isUndefined(config2[prop])) {
-      return getMergedValue(undefined, config2[prop]);
-    } else if (!utils.isUndefined(config1[prop])) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  // eslint-disable-next-line consistent-return
-  function mergeDirectKeys(prop) {
-    if (prop in config2) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (prop in config1) {
-      return getMergedValue(undefined, config1[prop]);
-    }
-  }
-
-  var mergeMap = {
-    'url': valueFromConfig2,
-    'method': valueFromConfig2,
-    'data': valueFromConfig2,
-    'baseURL': defaultToConfig2,
-    'transformRequest': defaultToConfig2,
-    'transformResponse': defaultToConfig2,
-    'paramsSerializer': defaultToConfig2,
-    'timeout': defaultToConfig2,
-    'timeoutMessage': defaultToConfig2,
-    'withCredentials': defaultToConfig2,
-    'adapter': defaultToConfig2,
-    'responseType': defaultToConfig2,
-    'xsrfCookieName': defaultToConfig2,
-    'xsrfHeaderName': defaultToConfig2,
-    'onUploadProgress': defaultToConfig2,
-    'onDownloadProgress': defaultToConfig2,
-    'decompress': defaultToConfig2,
-    'maxContentLength': defaultToConfig2,
-    'maxBodyLength': defaultToConfig2,
-    'beforeRedirect': defaultToConfig2,
-    'transport': defaultToConfig2,
-    'httpAgent': defaultToConfig2,
-    'httpsAgent': defaultToConfig2,
-    'cancelToken': defaultToConfig2,
-    'socketPath': defaultToConfig2,
-    'responseEncoding': defaultToConfig2,
-    'validateStatus': mergeDirectKeys
-  };
-
-  utils.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-    var merge = mergeMap[prop] || mergeDeepProperties;
-    var configValue = merge(prop);
-    (utils.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
-  });
-
-  return config;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/settle.js":
-/*!***********************************************!*\
-  !*** ./node_modules/axios/lib/core/settle.js ***!
-  \***********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var AxiosError = __webpack_require__(/*! ./AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-
-/**
- * Resolve or reject a Promise based on response status.
- *
- * @param {Function} resolve A function that resolves the promise.
- * @param {Function} reject A function that rejects the promise.
- * @param {object} response The response.
- */
-module.exports = function settle(resolve, reject, response) {
-  var validateStatus = response.config.validateStatus;
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
-    resolve(response);
-  } else {
-    reject(new AxiosError(
-      'Request failed with status code ' + response.status,
-      [AxiosError.ERR_BAD_REQUEST, AxiosError.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
-      response.config,
-      response.request,
-      response
-    ));
-  }
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/core/transformData.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/core/transformData.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-var defaults = __webpack_require__(/*! ../defaults */ "./node_modules/axios/lib/defaults/index.js");
-
-/**
- * Transform the data for a request or a response
- *
- * @param {Object|String} data The data to be transformed
- * @param {Array} headers The headers for the request or response
- * @param {Array|Function} fns A single function or Array of functions
- * @returns {*} The resulting transformed data
- */
-module.exports = function transformData(data, headers, fns) {
-  var context = this || defaults;
-  /*eslint no-param-reassign:0*/
-  utils.forEach(fns, function transform(fn) {
-    data = fn.call(context, data, headers);
-  });
-
-  return data;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/defaults/index.js":
-/*!**************************************************!*\
-  !*** ./node_modules/axios/lib/defaults/index.js ***!
-  \**************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-var normalizeHeaderName = __webpack_require__(/*! ../helpers/normalizeHeaderName */ "./node_modules/axios/lib/helpers/normalizeHeaderName.js");
-var AxiosError = __webpack_require__(/*! ../core/AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-var transitionalDefaults = __webpack_require__(/*! ./transitional */ "./node_modules/axios/lib/defaults/transitional.js");
-var toFormData = __webpack_require__(/*! ../helpers/toFormData */ "./node_modules/axios/lib/helpers/toFormData.js");
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(/*! ../adapters/xhr */ "./node_modules/axios/lib/adapters/xhr.js");
-  } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(/*! ../adapters/http */ "./node_modules/axios/lib/adapters/xhr.js");
-  }
-  return adapter;
-}
-
-function stringifySafely(rawValue, parser, encoder) {
-  if (utils.isString(rawValue)) {
-    try {
-      (parser || JSON.parse)(rawValue);
-      return utils.trim(rawValue);
-    } catch (e) {
-      if (e.name !== 'SyntaxError') {
-        throw e;
-      }
-    }
-  }
-
-  return (encoder || JSON.stringify)(rawValue);
-}
-
-var defaults = {
-
-  transitional: transitionalDefaults,
-
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Accept');
-    normalizeHeaderName(headers, 'Content-Type');
-
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-
-    var isObjectPayload = utils.isObject(data);
-    var contentType = headers && headers['Content-Type'];
-
-    var isFileList;
-
-    if ((isFileList = utils.isFileList(data)) || (isObjectPayload && contentType === 'multipart/form-data')) {
-      var _FormData = this.env && this.env.FormData;
-      return toFormData(isFileList ? {'files[]': data} : data, _FormData && new _FormData());
-    } else if (isObjectPayload || contentType === 'application/json') {
-      setContentTypeIfUnset(headers, 'application/json');
-      return stringifySafely(data);
-    }
-
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    var transitional = this.transitional || defaults.transitional;
-    var silentJSONParsing = transitional && transitional.silentJSONParsing;
-    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
-    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
-
-    if (strictJSONParsing || (forcedJSONParsing && utils.isString(data) && data.length)) {
-      try {
-        return JSON.parse(data);
-      } catch (e) {
-        if (strictJSONParsing) {
-          if (e.name === 'SyntaxError') {
-            throw AxiosError.from(e, AxiosError.ERR_BAD_RESPONSE, this, null, this.response);
-          }
-          throw e;
-        }
-      }
-    }
-
-    return data;
-  }],
-
-  /**
-   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-   * timeout is not created.
-   */
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-  maxBodyLength: -1,
-
-  env: {
-    FormData: __webpack_require__(/*! ./env/FormData */ "./node_modules/axios/lib/helpers/null.js")
-  },
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  },
-
-  headers: {
-    common: {
-      'Accept': 'application/json, text/plain, */*'
-    }
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/defaults/transitional.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/axios/lib/defaults/transitional.js ***!
-  \*********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = {
-  silentJSONParsing: true,
-  forcedJSONParsing: true,
-  clarifyTimeoutError: false
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/env/data.js":
-/*!********************************************!*\
-  !*** ./node_modules/axios/lib/env/data.js ***!
-  \********************************************/
-/***/ ((module) => {
-
-module.exports = {
-  "version": "0.27.2"
-};
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/bind.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/bind.js ***!
-  \************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = function bind(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/buildURL.js":
-/*!****************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
-  \****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-function encode(val) {
-  return encodeURIComponent(val).
-    replace(/%3A/gi, ':').
-    replace(/%24/g, '$').
-    replace(/%2C/gi, ',').
-    replace(/%20/g, '+').
-    replace(/%5B/gi, '[').
-    replace(/%5D/gi, ']');
-}
-
-/**
- * Build a URL by appending params to the end
- *
- * @param {string} url The base of the url (e.g., http://www.google.com)
- * @param {object} [params] The params to be appended
- * @returns {string} The formatted url
- */
-module.exports = function buildURL(url, params, paramsSerializer) {
-  /*eslint no-param-reassign:0*/
-  if (!params) {
-    return url;
-  }
-
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-
-    utils.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === 'undefined') {
-        return;
-      }
-
-      if (utils.isArray(val)) {
-        key = key + '[]';
-      } else {
-        val = [val];
-      }
-
-      utils.forEach(val, function parseValue(v) {
-        if (utils.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + '=' + encode(v));
-      });
-    });
-
-    serializedParams = parts.join('&');
-  }
-
-  if (serializedParams) {
-    var hashmarkIndex = url.indexOf('#');
-    if (hashmarkIndex !== -1) {
-      url = url.slice(0, hashmarkIndex);
-    }
-
-    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
-  }
-
-  return url;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/combineURLs.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/combineURLs.js ***!
-  \*******************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Creates a new URL by combining the specified URLs
- *
- * @param {string} baseURL The base URL
- * @param {string} relativeURL The relative URL
- * @returns {string} The combined URL
- */
-module.exports = function combineURLs(baseURL, relativeURL) {
-  return relativeURL
-    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-    : baseURL;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/cookies.js":
-/*!***************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/cookies.js ***!
-  \***************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs support document.cookie
-    (function standardBrowserEnv() {
-      return {
-        write: function write(name, value, expires, path, domain, secure) {
-          var cookie = [];
-          cookie.push(name + '=' + encodeURIComponent(value));
-
-          if (utils.isNumber(expires)) {
-            cookie.push('expires=' + new Date(expires).toGMTString());
-          }
-
-          if (utils.isString(path)) {
-            cookie.push('path=' + path);
-          }
-
-          if (utils.isString(domain)) {
-            cookie.push('domain=' + domain);
-          }
-
-          if (secure === true) {
-            cookie.push('secure');
-          }
-
-          document.cookie = cookie.join('; ');
-        },
-
-        read: function read(name) {
-          var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-          return (match ? decodeURIComponent(match[3]) : null);
-        },
-
-        remove: function remove(name) {
-          this.write(name, '', Date.now() - 86400000);
-        }
-      };
-    })() :
-
-  // Non standard browser env (web workers, react-native) lack needed support.
-    (function nonStandardBrowserEnv() {
-      return {
-        write: function write() {},
-        read: function read() { return null; },
-        remove: function remove() {}
-      };
-    })()
-);
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isAbsoluteURL.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isAbsoluteURL.js ***!
-  \*********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Determines whether the specified URL is absolute
- *
- * @param {string} url The URL to test
- * @returns {boolean} True if the specified URL is absolute, otherwise false
- */
-module.exports = function isAbsoluteURL(url) {
-  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-  // by any combination of letters, digits, plus, period, or hyphen.
-  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isAxiosError.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * Determines whether the payload is an error thrown by Axios
- *
- * @param {*} payload The value to test
- * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
- */
-module.exports = function isAxiosError(payload) {
-  return utils.isObject(payload) && (payload.isAxiosError === true);
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/isURLSameOrigin.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/isURLSameOrigin.js ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = (
-  utils.isStandardBrowserEnv() ?
-
-  // Standard browser envs have full support of the APIs needed to test
-  // whether the request URL is of the same origin as current location.
-    (function standardBrowserEnv() {
-      var msie = /(msie|trident)/i.test(navigator.userAgent);
-      var urlParsingNode = document.createElement('a');
-      var originURL;
-
-      /**
-    * Parse a URL to discover it's components
-    *
-    * @param {String} url The URL to be parsed
-    * @returns {Object}
-    */
-      function resolveURL(url) {
-        var href = url;
-
-        if (msie) {
-        // IE needs attribute set twice to normalize properties
-          urlParsingNode.setAttribute('href', href);
-          href = urlParsingNode.href;
-        }
-
-        urlParsingNode.setAttribute('href', href);
-
-        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-        return {
-          href: urlParsingNode.href,
-          protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-          host: urlParsingNode.host,
-          search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-          hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-          hostname: urlParsingNode.hostname,
-          port: urlParsingNode.port,
-          pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-            urlParsingNode.pathname :
-            '/' + urlParsingNode.pathname
-        };
-      }
-
-      originURL = resolveURL(window.location.href);
-
-      /**
-    * Determine if a URL shares the same origin as the current location
-    *
-    * @param {String} requestURL The URL to test
-    * @returns {boolean} True if URL shares the same origin, otherwise false
-    */
-      return function isURLSameOrigin(requestURL) {
-        var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-        return (parsed.protocol === originURL.protocol &&
-            parsed.host === originURL.host);
-      };
-    })() :
-
-  // Non standard browser envs (web workers, react-native) lack needed support.
-    (function nonStandardBrowserEnv() {
-      return function isURLSameOrigin() {
-        return true;
-      };
-    })()
-);
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/normalizeHeaderName.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/normalizeHeaderName.js ***!
-  \***************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-module.exports = function normalizeHeaderName(headers, normalizedName) {
-  utils.forEach(headers, function processHeader(value, name) {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value;
-      delete headers[name];
-    }
-  });
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/null.js":
-/*!************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/null.js ***!
-  \************************************************/
-/***/ ((module) => {
-
-// eslint-disable-next-line strict
-module.exports = null;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/parseHeaders.js":
-/*!********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/parseHeaders.js ***!
-  \********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
-
-// Headers whose duplicates are ignored by node
-// c.f. https://nodejs.org/api/http.html#http_message_headers
-var ignoreDuplicateOf = [
-  'age', 'authorization', 'content-length', 'content-type', 'etag',
-  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
-  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
-  'referer', 'retry-after', 'user-agent'
-];
-
-/**
- * Parse headers into an object
- *
- * ```
- * Date: Wed, 27 Aug 2014 08:58:49 GMT
- * Content-Type: application/json
- * Connection: keep-alive
- * Transfer-Encoding: chunked
- * ```
- *
- * @param {String} headers Headers needing to be parsed
- * @returns {Object} Headers parsed into an object
- */
-module.exports = function parseHeaders(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-
-  if (!headers) { return parsed; }
-
-  utils.forEach(headers.split('\n'), function parser(line) {
-    i = line.indexOf(':');
-    key = utils.trim(line.substr(0, i)).toLowerCase();
-    val = utils.trim(line.substr(i + 1));
-
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === 'set-cookie') {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
-      }
-    }
-  });
-
-  return parsed;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/parseProtocol.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/parseProtocol.js ***!
-  \*********************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-module.exports = function parseProtocol(url) {
-  var match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
-  return match && match[1] || '';
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/spread.js":
-/*!**************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/spread.js ***!
-  \**************************************************/
-/***/ ((module) => {
-
-"use strict";
-
-
-/**
- * Syntactic sugar for invoking a function and expanding an array for arguments.
- *
- * Common use case would be to use `Function.prototype.apply`.
- *
- *  ```js
- *  function f(x, y, z) {}
- *  var args = [1, 2, 3];
- *  f.apply(null, args);
- *  ```
- *
- * With `spread` this example can be re-written.
- *
- *  ```js
- *  spread(function(x, y, z) {})([1, 2, 3]);
- *  ```
- *
- * @param {Function} callback
- * @returns {Function}
- */
-module.exports = function spread(callback) {
-  return function wrap(arr) {
-    return callback.apply(null, arr);
-  };
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/toFormData.js":
-/*!******************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/toFormData.js ***!
-  \******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var utils = __webpack_require__(/*! ../utils */ "./node_modules/axios/lib/utils.js");
-
-/**
- * Convert a data object to FormData
- * @param {Object} obj
- * @param {?Object} [formData]
- * @returns {Object}
- **/
-
-function toFormData(obj, formData) {
-  // eslint-disable-next-line no-param-reassign
-  formData = formData || new FormData();
-
-  var stack = [];
-
-  function convertValue(value) {
-    if (value === null) return '';
-
-    if (utils.isDate(value)) {
-      return value.toISOString();
-    }
-
-    if (utils.isArrayBuffer(value) || utils.isTypedArray(value)) {
-      return typeof Blob === 'function' ? new Blob([value]) : Buffer.from(value);
-    }
-
-    return value;
-  }
-
-  function build(data, parentKey) {
-    if (utils.isPlainObject(data) || utils.isArray(data)) {
-      if (stack.indexOf(data) !== -1) {
-        throw Error('Circular reference detected in ' + parentKey);
-      }
-
-      stack.push(data);
-
-      utils.forEach(data, function each(value, key) {
-        if (utils.isUndefined(value)) return;
-        var fullKey = parentKey ? parentKey + '.' + key : key;
-        var arr;
-
-        if (value && !parentKey && typeof value === 'object') {
-          if (utils.endsWith(key, '{}')) {
-            // eslint-disable-next-line no-param-reassign
-            value = JSON.stringify(value);
-          } else if (utils.endsWith(key, '[]') && (arr = utils.toArray(value))) {
-            // eslint-disable-next-line func-names
-            arr.forEach(function(el) {
-              !utils.isUndefined(el) && formData.append(fullKey, convertValue(el));
-            });
-            return;
-          }
-        }
-
-        build(value, fullKey);
-      });
-
-      stack.pop();
-    } else {
-      formData.append(parentKey, convertValue(data));
-    }
-  }
-
-  build(obj);
-
-  return formData;
-}
-
-module.exports = toFormData;
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/helpers/validator.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/axios/lib/helpers/validator.js ***!
-  \*****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var VERSION = (__webpack_require__(/*! ../env/data */ "./node_modules/axios/lib/env/data.js").version);
-var AxiosError = __webpack_require__(/*! ../core/AxiosError */ "./node_modules/axios/lib/core/AxiosError.js");
-
-var validators = {};
-
-// eslint-disable-next-line func-names
-['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function(type, i) {
-  validators[type] = function validator(thing) {
-    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
-  };
-});
-
-var deprecatedWarnings = {};
-
-/**
- * Transitional option validator
- * @param {function|boolean?} validator - set to false if the transitional option has been removed
- * @param {string?} version - deprecated version / removed since version
- * @param {string?} message - some message with additional info
- * @returns {function}
- */
-validators.transitional = function transitional(validator, version, message) {
-  function formatMessage(opt, desc) {
-    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
-  }
-
-  // eslint-disable-next-line func-names
-  return function(value, opt, opts) {
-    if (validator === false) {
-      throw new AxiosError(
-        formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')),
-        AxiosError.ERR_DEPRECATED
-      );
-    }
-
-    if (version && !deprecatedWarnings[opt]) {
-      deprecatedWarnings[opt] = true;
-      // eslint-disable-next-line no-console
-      console.warn(
-        formatMessage(
-          opt,
-          ' has been deprecated since v' + version + ' and will be removed in the near future'
-        )
-      );
-    }
-
-    return validator ? validator(value, opt, opts) : true;
-  };
-};
-
-/**
- * Assert object's properties type
- * @param {object} options
- * @param {object} schema
- * @param {boolean?} allowUnknown
- */
-
-function assertOptions(options, schema, allowUnknown) {
-  if (typeof options !== 'object') {
-    throw new AxiosError('options must be an object', AxiosError.ERR_BAD_OPTION_VALUE);
-  }
-  var keys = Object.keys(options);
-  var i = keys.length;
-  while (i-- > 0) {
-    var opt = keys[i];
-    var validator = schema[opt];
-    if (validator) {
-      var value = options[opt];
-      var result = value === undefined || validator(value, opt, options);
-      if (result !== true) {
-        throw new AxiosError('option ' + opt + ' must be ' + result, AxiosError.ERR_BAD_OPTION_VALUE);
-      }
-      continue;
-    }
-    if (allowUnknown !== true) {
-      throw new AxiosError('Unknown option ' + opt, AxiosError.ERR_BAD_OPTION);
-    }
-  }
-}
-
-module.exports = {
-  assertOptions: assertOptions,
-  validators: validators
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/axios/lib/utils.js":
-/*!*****************************************!*\
-  !*** ./node_modules/axios/lib/utils.js ***!
-  \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-
-// utils is a library of generic helper functions non-specific to axios
-
-var toString = Object.prototype.toString;
-
-// eslint-disable-next-line func-names
-var kindOf = (function(cache) {
-  // eslint-disable-next-line func-names
-  return function(thing) {
-    var str = toString.call(thing);
-    return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
-  };
-})(Object.create(null));
-
-function kindOfTest(type) {
-  type = type.toLowerCase();
-  return function isKindOf(thing) {
-    return kindOf(thing) === type;
-  };
-}
-
-/**
- * Determine if a value is an Array
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Array, otherwise false
- */
-function isArray(val) {
-  return Array.isArray(val);
-}
-
-/**
- * Determine if a value is undefined
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if the value is undefined, otherwise false
- */
-function isUndefined(val) {
-  return typeof val === 'undefined';
-}
-
-/**
- * Determine if a value is a Buffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Buffer, otherwise false
- */
-function isBuffer(val) {
-  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor)
-    && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
-}
-
-/**
- * Determine if a value is an ArrayBuffer
- *
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an ArrayBuffer, otherwise false
- */
-var isArrayBuffer = kindOfTest('ArrayBuffer');
-
-
-/**
- * Determine if a value is a view on an ArrayBuffer
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
- */
-function isArrayBufferView(val) {
-  var result;
-  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
-    result = ArrayBuffer.isView(val);
-  } else {
-    result = (val) && (val.buffer) && (isArrayBuffer(val.buffer));
-  }
-  return result;
-}
-
-/**
- * Determine if a value is a String
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a String, otherwise false
- */
-function isString(val) {
-  return typeof val === 'string';
-}
-
-/**
- * Determine if a value is a Number
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Number, otherwise false
- */
-function isNumber(val) {
-  return typeof val === 'number';
-}
-
-/**
- * Determine if a value is an Object
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is an Object, otherwise false
- */
-function isObject(val) {
-  return val !== null && typeof val === 'object';
-}
-
-/**
- * Determine if a value is a plain Object
- *
- * @param {Object} val The value to test
- * @return {boolean} True if value is a plain Object, otherwise false
- */
-function isPlainObject(val) {
-  if (kindOf(val) !== 'object') {
-    return false;
-  }
-
-  var prototype = Object.getPrototypeOf(val);
-  return prototype === null || prototype === Object.prototype;
-}
-
-/**
- * Determine if a value is a Date
- *
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Date, otherwise false
- */
-var isDate = kindOfTest('Date');
-
-/**
- * Determine if a value is a File
- *
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a File, otherwise false
- */
-var isFile = kindOfTest('File');
-
-/**
- * Determine if a value is a Blob
- *
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Blob, otherwise false
- */
-var isBlob = kindOfTest('Blob');
-
-/**
- * Determine if a value is a FileList
- *
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a File, otherwise false
- */
-var isFileList = kindOfTest('FileList');
-
-/**
- * Determine if a value is a Function
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Function, otherwise false
- */
-function isFunction(val) {
-  return toString.call(val) === '[object Function]';
-}
-
-/**
- * Determine if a value is a Stream
- *
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a Stream, otherwise false
- */
-function isStream(val) {
-  return isObject(val) && isFunction(val.pipe);
-}
-
-/**
- * Determine if a value is a FormData
- *
- * @param {Object} thing The value to test
- * @returns {boolean} True if value is an FormData, otherwise false
- */
-function isFormData(thing) {
-  var pattern = '[object FormData]';
-  return thing && (
-    (typeof FormData === 'function' && thing instanceof FormData) ||
-    toString.call(thing) === pattern ||
-    (isFunction(thing.toString) && thing.toString() === pattern)
-  );
-}
-
-/**
- * Determine if a value is a URLSearchParams object
- * @function
- * @param {Object} val The value to test
- * @returns {boolean} True if value is a URLSearchParams object, otherwise false
- */
-var isURLSearchParams = kindOfTest('URLSearchParams');
-
-/**
- * Trim excess whitespace off the beginning and end of a string
- *
- * @param {String} str The String to trim
- * @returns {String} The String freed of excess whitespace
- */
-function trim(str) {
-  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
-}
-
-/**
- * Determine if we're running in a standard browser environment
- *
- * This allows axios to run in a web worker, and react-native.
- * Both environments support XMLHttpRequest, but not fully standard globals.
- *
- * web workers:
- *  typeof window -> undefined
- *  typeof document -> undefined
- *
- * react-native:
- *  navigator.product -> 'ReactNative'
- * nativescript
- *  navigator.product -> 'NativeScript' or 'NS'
- */
-function isStandardBrowserEnv() {
-  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
-                                           navigator.product === 'NativeScript' ||
-                                           navigator.product === 'NS')) {
-    return false;
-  }
-  return (
-    typeof window !== 'undefined' &&
-    typeof document !== 'undefined'
-  );
-}
-
-/**
- * Iterate over an Array or an Object invoking a function for each item.
- *
- * If `obj` is an Array callback will be called passing
- * the value, index, and complete array for each item.
- *
- * If 'obj' is an Object callback will be called passing
- * the value, key, and complete object for each property.
- *
- * @param {Object|Array} obj The object to iterate
- * @param {Function} fn The callback to invoke for each item
- */
-function forEach(obj, fn) {
-  // Don't bother if no value provided
-  if (obj === null || typeof obj === 'undefined') {
-    return;
-  }
-
-  // Force an array if not already something iterable
-  if (typeof obj !== 'object') {
-    /*eslint no-param-reassign:0*/
-    obj = [obj];
-  }
-
-  if (isArray(obj)) {
-    // Iterate over array values
-    for (var i = 0, l = obj.length; i < l; i++) {
-      fn.call(null, obj[i], i, obj);
-    }
-  } else {
-    // Iterate over object keys
-    for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        fn.call(null, obj[key], key, obj);
-      }
-    }
-  }
-}
-
-/**
- * Accepts varargs expecting each argument to be an object, then
- * immutably merges the properties of each object and returns result.
- *
- * When multiple objects contain the same key the later object in
- * the arguments list will take precedence.
- *
- * Example:
- *
- * ```js
- * var result = merge({foo: 123}, {foo: 456});
- * console.log(result.foo); // outputs 456
- * ```
- *
- * @param {Object} obj1 Object to merge
- * @returns {Object} Result of all merge properties
- */
-function merge(/* obj1, obj2, obj3, ... */) {
-  var result = {};
-  function assignValue(val, key) {
-    if (isPlainObject(result[key]) && isPlainObject(val)) {
-      result[key] = merge(result[key], val);
-    } else if (isPlainObject(val)) {
-      result[key] = merge({}, val);
-    } else if (isArray(val)) {
-      result[key] = val.slice();
-    } else {
-      result[key] = val;
-    }
-  }
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-
-/**
- * Extends object a by mutably adding to it the properties of object b.
- *
- * @param {Object} a The object to be extended
- * @param {Object} b The object to copy properties from
- * @param {Object} thisArg The object to bind function to
- * @return {Object} The resulting value of object a
- */
-function extend(a, b, thisArg) {
-  forEach(b, function assignValue(val, key) {
-    if (thisArg && typeof val === 'function') {
-      a[key] = bind(val, thisArg);
-    } else {
-      a[key] = val;
-    }
-  });
-  return a;
-}
-
-/**
- * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
- *
- * @param {string} content with BOM
- * @return {string} content value without BOM
- */
-function stripBOM(content) {
-  if (content.charCodeAt(0) === 0xFEFF) {
-    content = content.slice(1);
-  }
-  return content;
-}
-
-/**
- * Inherit the prototype methods from one constructor into another
- * @param {function} constructor
- * @param {function} superConstructor
- * @param {object} [props]
- * @param {object} [descriptors]
- */
-
-function inherits(constructor, superConstructor, props, descriptors) {
-  constructor.prototype = Object.create(superConstructor.prototype, descriptors);
-  constructor.prototype.constructor = constructor;
-  props && Object.assign(constructor.prototype, props);
-}
-
-/**
- * Resolve object with deep prototype chain to a flat object
- * @param {Object} sourceObj source object
- * @param {Object} [destObj]
- * @param {Function} [filter]
- * @returns {Object}
- */
-
-function toFlatObject(sourceObj, destObj, filter) {
-  var props;
-  var i;
-  var prop;
-  var merged = {};
-
-  destObj = destObj || {};
-
-  do {
-    props = Object.getOwnPropertyNames(sourceObj);
-    i = props.length;
-    while (i-- > 0) {
-      prop = props[i];
-      if (!merged[prop]) {
-        destObj[prop] = sourceObj[prop];
-        merged[prop] = true;
-      }
-    }
-    sourceObj = Object.getPrototypeOf(sourceObj);
-  } while (sourceObj && (!filter || filter(sourceObj, destObj)) && sourceObj !== Object.prototype);
-
-  return destObj;
-}
-
-/*
- * determines whether a string ends with the characters of a specified string
- * @param {String} str
- * @param {String} searchString
- * @param {Number} [position= 0]
- * @returns {boolean}
- */
-function endsWith(str, searchString, position) {
-  str = String(str);
-  if (position === undefined || position > str.length) {
-    position = str.length;
-  }
-  position -= searchString.length;
-  var lastIndex = str.indexOf(searchString, position);
-  return lastIndex !== -1 && lastIndex === position;
-}
-
-
-/**
- * Returns new array from array like object
- * @param {*} [thing]
- * @returns {Array}
- */
-function toArray(thing) {
-  if (!thing) return null;
-  var i = thing.length;
-  if (isUndefined(i)) return null;
-  var arr = new Array(i);
-  while (i-- > 0) {
-    arr[i] = thing[i];
-  }
-  return arr;
-}
-
-// eslint-disable-next-line func-names
-var isTypedArray = (function(TypedArray) {
-  // eslint-disable-next-line func-names
-  return function(thing) {
-    return TypedArray && thing instanceof TypedArray;
-  };
-})(typeof Uint8Array !== 'undefined' && Object.getPrototypeOf(Uint8Array));
-
-module.exports = {
-  isArray: isArray,
-  isArrayBuffer: isArrayBuffer,
-  isBuffer: isBuffer,
-  isFormData: isFormData,
-  isArrayBufferView: isArrayBufferView,
-  isString: isString,
-  isNumber: isNumber,
-  isObject: isObject,
-  isPlainObject: isPlainObject,
-  isUndefined: isUndefined,
-  isDate: isDate,
-  isFile: isFile,
-  isBlob: isBlob,
-  isFunction: isFunction,
-  isStream: isStream,
-  isURLSearchParams: isURLSearchParams,
-  isStandardBrowserEnv: isStandardBrowserEnv,
-  forEach: forEach,
-  merge: merge,
-  extend: extend,
-  trim: trim,
-  stripBOM: stripBOM,
-  inherits: inherits,
-  toFlatObject: toFlatObject,
-  kindOf: kindOf,
-  kindOfTest: kindOfTest,
-  endsWith: endsWith,
-  toArray: toArray,
-  isTypedArray: isTypedArray,
-  isFileList: isFileList
-};
-
-
-/***/ }),
-
 /***/ "./src/App.js":
 /*!********************!*\
   !*** ./src/App.js ***!
@@ -4312,19 +4656,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
-/* harmony import */ var _components_Campus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Campus */ "./src/components/Campus.js");
-/* harmony import */ var _components_Nav__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Nav */ "./src/components/Nav.js");
-/* harmony import */ var _components_students__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/students */ "./src/components/students.js");
-/* harmony import */ var _redux_reducers_students_slice__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./redux/reducers/students-slice */ "./src/redux/reducers/students-slice.js");
-/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Home */ "./src/components/Home.js");
-/* harmony import */ var _redux_reducers_campus_slice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./redux/reducers/campus-slice */ "./src/redux/reducers/campus-slice.js");
-/* harmony import */ var _components_SingleCampus__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/SingleCampus */ "./src/components/SingleCampus.js");
-/* harmony import */ var _components_SingleStudent__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/SingleStudent */ "./src/components/SingleStudent.js");
-
-
-
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var _components_Campus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Campus */ "./src/components/Campus.js");
+/* harmony import */ var _components_Nav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Nav */ "./src/components/Nav.js");
+/* harmony import */ var _components_students__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/students */ "./src/components/students.js");
+/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Home */ "./src/components/Home.js");
+/* harmony import */ var _components_SingleCampus__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/SingleCampus */ "./src/components/SingleCampus.js");
+/* harmony import */ var _components_SingleStudent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/SingleStudent */ "./src/components/SingleStudent.js");
 
 
 
@@ -4335,26 +4673,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App() {
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    dispatch((0,_redux_reducers_students_slice__WEBPACK_IMPORTED_MODULE_5__.fetchStudentsThunk)());
-    dispatch((0,_redux_reducers_campus_slice__WEBPACK_IMPORTED_MODULE_7__.fetchCampusThunk)());
-  }, [dispatch]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "ITS HECKIN PROJECT TIME"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Nav__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Routes, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "ITS HECKIN PROJECT TIME"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Nav__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Routes, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Route, {
     path: "/",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Home__WEBPACK_IMPORTED_MODULE_6__["default"], null)
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Home__WEBPACK_IMPORTED_MODULE_4__["default"], null)
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Route, {
     path: "/campus",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Campus__WEBPACK_IMPORTED_MODULE_2__["default"], null)
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Campus__WEBPACK_IMPORTED_MODULE_1__["default"], null)
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Route, {
     path: "/students",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_students__WEBPACK_IMPORTED_MODULE_4__["default"], null)
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_students__WEBPACK_IMPORTED_MODULE_3__["default"], null)
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Route, {
     path: "/campus/:id",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_SingleCampus__WEBPACK_IMPORTED_MODULE_8__["default"], null)
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_SingleCampus__WEBPACK_IMPORTED_MODULE_5__["default"], null)
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Route, {
     path: "/student/:id",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_SingleStudent__WEBPACK_IMPORTED_MODULE_9__["default"], null)
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_SingleStudent__WEBPACK_IMPORTED_MODULE_6__["default"], null)
   })));
 }
 
@@ -4375,10 +4708,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var _redux_reducers_delete_campus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/delete-campus */ "./src/redux/reducers/delete-campus.js");
-/* harmony import */ var _CampusForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CampusForm */ "./src/components/CampusForm.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
+/* harmony import */ var _CampusForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CampusForm */ "./src/components/CampusForm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -4386,21 +4737,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Campus() {
-  var campus = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
-    return state.persistedCampus.campus;
-  });
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Campus Page", campus && campus.map(function (campi) {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+      _useState2 = _slicedToArray(_useState, 2),
+      adding = _useState2[0],
+      setAdding = _useState2[1];
+
+  var _useGetCampusQuery = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useGetCampusQuery)(),
+      data = _useGetCampusQuery.data,
+      error = _useGetCampusQuery.error,
+      isLoading = _useGetCampusQuery.isLoading,
+      isFetching = _useGetCampusQuery.isFetching,
+      isSuccess = _useGetCampusQuery.isSuccess;
+
+  var _useDeleteCampusMutat = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useDeleteCampusMutation)(),
+      _useDeleteCampusMutat2 = _slicedToArray(_useDeleteCampusMutat, 1),
+      deleteCampus = _useDeleteCampusMutat2[0];
+
+  var deleteHandler = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return deleteCampus(id);
+
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function deleteHandler(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Campus Page", isLoading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Campuses are being served"), isFetching && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Fetching campuses, please wait"), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Oops! There was an error Dx"), isSuccess && data.map(function (campi) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: campi.id
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
       to: "/campus/".concat(campi.id)
     }, campi.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       onClick: function onClick() {
-        return dispatch((0,_redux_reducers_delete_campus__WEBPACK_IMPORTED_MODULE_2__.deleteCampusThunk)(campi.id));
+        return deleteHandler(campi.id);
       }
     }, "X"));
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_CampusForm__WEBPACK_IMPORTED_MODULE_3__["default"], null));
+  }), adding && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_CampusForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    props: adding
+  }));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Campus);
@@ -4420,8 +4807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _redux_reducers_create_campus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/create-campus */ "./src/redux/reducers/create-campus.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -4452,7 +4839,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function CampusForm() {
+function CampusForm(props) {
+  var _useAddCampusMutation = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useAddCampusMutation)(),
+      _useAddCampusMutation2 = _slicedToArray(_useAddCampusMutation, 1),
+      addCampus = _useAddCampusMutation2[0];
+
+  var _useUpdateCampusMutat = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useUpdateCampusMutation)(),
+      _useUpdateCampusMutat2 = _slicedToArray(_useUpdateCampusMutat, 1),
+      editCampus = _useUpdateCampusMutat2[0];
+
+  var params = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.useParams)();
+
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
     name: "",
     address: "",
@@ -4463,18 +4860,36 @@ function CampusForm() {
       formData = _useState2[0],
       setFormData = _useState2[1];
 
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-
   var handleSubmit = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
+      var payload;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
-              dispatch((0,_redux_reducers_create_campus__WEBPACK_IMPORTED_MODULE_2__.createCampusThunk)(formData));
+              payload = {
+                id: params.id,
+                data: formData
+              };
 
-            case 2:
+              if (!props.props) {
+                _context.next = 7;
+                break;
+              }
+
+              _context.next = 5;
+              return addCampus(formData);
+
+            case 5:
+              _context.next = 9;
+              break;
+
+            case 7:
+              _context.next = 9;
+              return editCampus(payload);
+
+            case 9:
             case "end":
               return _context.stop();
           }
@@ -4487,7 +4902,7 @@ function CampusForm() {
     };
   }();
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "CampusForm", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, props.props ? "Add Campus" : "Edit Campus", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     onSubmit: function onSubmit(e) {
       handleSubmit(e);
     }
@@ -4608,29 +5023,95 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var _redux_reducers_singleCampus_slice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/singleCampus-slice */ "./src/redux/reducers/singleCampus-slice.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
+/* harmony import */ var _CampusForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CampusForm */ "./src/components/CampusForm.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
 
 
 function SingleCampus() {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      edit = _useState2[0],
+      setEdit = _useState2[1];
+
   var params = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useParams)();
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-  var campus = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
-    return state.persistedSingleCampus.singleCampus;
-  });
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    dispatch((0,_redux_reducers_singleCampus_slice__WEBPACK_IMPORTED_MODULE_2__.fetchSingleCampusThunk)(params.id));
-  }, [dispatch]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "YOOOOO", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, campus.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, campus.address), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, campus.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "image goes here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Students"), campus.Students && campus.Students.map(function (student) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
-      to: "/student/".concat(student.id),
+
+  var _useGetSingleCampusQu = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useGetSingleCampusQuery)(params.id),
+      data = _useGetSingleCampusQu.data,
+      error = _useGetSingleCampusQu.error,
+      isLoading = _useGetSingleCampusQu.isLoading,
+      isFetching = _useGetSingleCampusQu.isFetching,
+      isSuccess = _useGetSingleCampusQu.isSuccess;
+
+  var _useUpdateCampusMutat = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useUpdateCampusMutation)(),
+      _useUpdateCampusMutat2 = _slicedToArray(_useUpdateCampusMutat, 1),
+      updateCampus = _useUpdateCampusMutat2[0];
+
+  var handleRemoveStudent = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e, id) {
+      var payload;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              payload = {
+                id: params.id,
+                data: "remove",
+                studentId: id
+              };
+              _context.next = 4;
+              return updateCampus(payload);
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function handleRemoveStudent(_x, _x2) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Single Campus Page", isLoading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Campus is being served"), isFetching && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Fetching campus, please wait"), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Oops! There was an error Dx"), isSuccess && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, data.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, data.address), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, data.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "image goes here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Students"), data.Students && data.Students.map(function (student) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: student.id
-    }, student.firstName, student.firstLame);
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+      to: "/student/".concat(student.id)
+    }, student.firstName, student.firstLame), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      onClick: function onClick(e) {
+        return handleRemoveStudent(e, student.id);
+      }
+    }, "Unregister Student"));
+  })), !edit && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_CampusForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    props: edit
   }));
 }
 
@@ -4651,28 +5132,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var _redux_reducers_singleStudent_slice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/singleStudent-slice */ "./src/redux/reducers/singleStudent-slice.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
+/* harmony import */ var _StudentForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StudentForm */ "./src/components/StudentForm.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
 
 
 function SingleStudent() {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      isTrue = _useState2[0],
+      setIsTrue = _useState2[1];
+
   var params = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useParams)();
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-  var student = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
-    return state.persistedSingleStudent.singleStudent;
-  });
-  console.log(student);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    dispatch((0,_redux_reducers_singleStudent_slice__WEBPACK_IMPORTED_MODULE_2__.fetchSingleStudentThunk)(params.id));
-  }, [dispatch]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, student.firstName, " ", student.lastName, "'s Page"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "email : ", student.email), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "gpa : ", student.gpa), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "image goes here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "School :", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
-    to: "/campus/".concat(student.CampusId)
-  }, student.Campus && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h4", null, student.Campus.name))));
+
+  var _useGetSingleStudentQ = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useGetSingleStudentQuery)(params.id),
+      data = _useGetSingleStudentQ.data,
+      error = _useGetSingleStudentQ.error,
+      isLoading = _useGetSingleStudentQ.isLoading,
+      isFetching = _useGetSingleStudentQ.isFetching,
+      isSuccess = _useGetSingleStudentQ.isSuccess;
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Campus is being served"), isFetching && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Fetching campus, please wait"), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Oops! There was an error Dx"), isSuccess && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, data.firstName, " ", data.lastName, "'s Page"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "email : ", data.email), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "gpa : ", data.gpa), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "image goes here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "School :", " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+    to: "/campus/".concat(data.CampusId)
+  }, data.Campus && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h4", null, data.Campus.name)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_StudentForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    props: isTrue
+  }));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SingleStudent);
@@ -4692,8 +5192,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _redux_reducers_create_student__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/create-student */ "./src/redux/reducers/create-student.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -4724,7 +5224,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function StudentForm() {
+function StudentForm(props) {
+  var _useAddStudentMutatio = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useAddStudentMutation)(),
+      _useAddStudentMutatio2 = _slicedToArray(_useAddStudentMutatio, 1),
+      addStudent = _useAddStudentMutatio2[0];
+
+  var _useUpdateStudentMuta = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useUpdateStudentMutation)(),
+      _useUpdateStudentMuta2 = _slicedToArray(_useUpdateStudentMuta, 1),
+      editStudent = _useUpdateStudentMuta2[0];
+
+  var params = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.useParams)();
+
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
     firstName: "",
     lastName: "",
@@ -4736,18 +5246,36 @@ function StudentForm() {
       formData = _useState2[0],
       setFormData = _useState2[1];
 
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-
   var handleSubmit = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
+      var payload;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
-              dispatch((0,_redux_reducers_create_student__WEBPACK_IMPORTED_MODULE_2__.createStudentThunk)(formData));
+              payload = {
+                id: params.id,
+                data: formData
+              };
 
-            case 2:
+              if (!props.props) {
+                _context.next = 7;
+                break;
+              }
+
+              _context.next = 5;
+              return addStudent(formData);
+
+            case 5:
+              _context.next = 9;
+              break;
+
+            case 7:
+              _context.next = 9;
+              return editStudent(payload);
+
+            case 9:
             case "end":
               return _context.stop();
           }
@@ -4760,7 +5288,7 @@ function StudentForm() {
     };
   }();
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "StudentForm", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, props.props ? "Add new Student" : "Edit Student", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     onSubmit: function onSubmit(e) {
       handleSubmit(e);
     }
@@ -4837,10 +5365,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var _redux_reducers_delete_student__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../redux/reducers/delete-student */ "./src/redux/reducers/delete-student.js");
-/* harmony import */ var _StudentForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./StudentForm */ "./src/components/StudentForm.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
+/* harmony import */ var _StudentForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StudentForm */ "./src/components/StudentForm.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -4848,839 +5386,192 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Students() {
-  var students = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
-    return state.persistedStudents.students;
-  });
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
-  console.log(students);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Students Page", students && students.map(function (student) {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+      _useState2 = _slicedToArray(_useState, 2),
+      isTrue = _useState2[0],
+      setIsTrue = _useState2[1];
+
+  var _useGetStudentQuery = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useGetStudentQuery)({
+    refetchOnMountOrArgChange: true
+  }),
+      data = _useGetStudentQuery.data,
+      error = _useGetStudentQuery.error,
+      isLoading = _useGetStudentQuery.isLoading,
+      isFetching = _useGetStudentQuery.isFetching,
+      isSuccess = _useGetStudentQuery.isSuccess;
+
+  var _useDeleteStudentMuta = (0,_redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_1__.useDeleteStudentMutation)(),
+      _useDeleteStudentMuta2 = _slicedToArray(_useDeleteStudentMuta, 1),
+      deleteStudent = _useDeleteStudentMuta2[0];
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Students Page", isLoading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Campuses are being served"), isFetching && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Fetching campuses, please wait"), error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Oops! There was an error Dx"), isSuccess && data.map(function (student) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: student.id
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
       to: "/student/".concat(student.id)
     }, student.firstName, " ", student.lastName), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       onClick: function onClick() {
-        return dispatch((0,_redux_reducers_delete_student__WEBPACK_IMPORTED_MODULE_2__.deleteStudentThunk)(student.id));
+        return deleteStudent(student.id);
       }
     }, "X"));
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_StudentForm__WEBPACK_IMPORTED_MODULE_3__["default"], null));
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_StudentForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    props: isTrue
+  }));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Students);
 
 /***/ }),
 
-/***/ "./src/redux/reducers/campus-slice.js":
-/*!********************************************!*\
-  !*** ./src/redux/reducers/campus-slice.js ***!
-  \********************************************/
+/***/ "./src/redux/api/apiSlice.js":
+/*!***********************************!*\
+  !*** ./src/redux/api/apiSlice.js ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "fetchCampusActions": () => (/* binding */ fetchCampusActions),
-/* harmony export */   "fetchCampusThunk": () => (/* binding */ fetchCampusThunk)
+/* harmony export */   "apiSlice": () => (/* binding */ apiSlice),
+/* harmony export */   "useAddCampusMutation": () => (/* binding */ useAddCampusMutation),
+/* harmony export */   "useAddStudentMutation": () => (/* binding */ useAddStudentMutation),
+/* harmony export */   "useDeleteCampusMutation": () => (/* binding */ useDeleteCampusMutation),
+/* harmony export */   "useDeleteStudentMutation": () => (/* binding */ useDeleteStudentMutation),
+/* harmony export */   "useGetCampusQuery": () => (/* binding */ useGetCampusQuery),
+/* harmony export */   "useGetSingleCampusQuery": () => (/* binding */ useGetSingleCampusQuery),
+/* harmony export */   "useGetSingleStudentQuery": () => (/* binding */ useGetSingleStudentQuery),
+/* harmony export */   "useGetStudentQuery": () => (/* binding */ useGetStudentQuery),
+/* harmony export */   "useUpdateCampusMutation": () => (/* binding */ useUpdateCampusMutation),
+/* harmony export */   "useUpdateStudentMutation": () => (/* binding */ useUpdateStudentMutation)
 /* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/* harmony import */ var _reduxjs_toolkit_query_react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit/query/react */ "./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.esm.js");
+/* harmony import */ var _reduxjs_toolkit_query_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit/query/react */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js");
 
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var fetchCampus = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var response;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/campus");
-
-          case 3:
-            response = _context.sent;
-            return _context.abrupt("return", response);
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 10:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
-
-  return function fetchCampus() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fetchCampusThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("campus/fetchCampus", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-  var data;
-  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return fetchCampus();
-
-        case 2:
-          data = _context2.sent;
-          return _context2.abrupt("return", data.data);
-
-        case 4:
-        case "end":
-          return _context2.stop();
-      }
-    }
-  }, _callee2);
-})));
-var fetchCampusSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "fetchCampus",
-  initialState: {
-    campus: [],
-    singleCampus: {}
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(fetchCampusThunk.fulfilled, function (state, action) {
-      state.campus = action.payload;
-    });
+var apiSlice = (0,_reduxjs_toolkit_query_react__WEBPACK_IMPORTED_MODULE_0__.createApi)({
+  reducerPath: "apiSlice",
+  baseQuery: (0,_reduxjs_toolkit_query_react__WEBPACK_IMPORTED_MODULE_1__.fetchBaseQuery)({
+    baseUrl: "/api"
+  }),
+  tagTypes: ["Campus", "Students", "SingleCampus", "SingleStudent"],
+  endpoints: function endpoints(builder) {
+    return {
+      //GET ALL CAMPUS
+      getCampus: builder.query({
+        query: function query() {
+          return "/campus";
+        },
+        providesTags: ["Campus"]
+      }),
+      //GET ALL STUDENTS
+      getStudent: builder.query({
+        query: function query() {
+          return "/student";
+        },
+        providesTags: ["Students"]
+      }),
+      //GET SINGLE CAMPUS
+      getSingleCampus: builder.query({
+        query: function query(id) {
+          return "/campus/".concat(id);
+        },
+        providesTags: ["SingleCampus"]
+      }),
+      //GET SINGLE STUDENT
+      getSingleStudent: builder.query({
+        query: function query(id) {
+          return "/student/".concat(id);
+        },
+        providesTags: ["SingleStudent"]
+      }),
+      //ADD CAMPUS
+      addCampus: builder.mutation({
+        query: function query(payload) {
+          return (// console.log(payload),
+            {
+              url: "/campus",
+              method: "POST",
+              body: payload,
+              headhers: {
+                "Content-type": "application/json; charset=UTF-8"
+              }
+            }
+          );
+        },
+        invalidatesTags: ["Campus"]
+      }),
+      //ADD STUDENT
+      addStudent: builder.mutation({
+        query: function query(payload) {
+          return {
+            url: "/student",
+            method: "POST",
+            body: payload,
+            headhers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          };
+        },
+        invalidatesTags: ["Student"]
+      }),
+      //UPDATE CAMPUS
+      updateCampus: builder.mutation({
+        query: function query(payload) {
+          console.log(payload);
+          return {
+            url: "/campus/".concat(payload.id),
+            method: "PUT",
+            body: payload.id
+          };
+        },
+        invalidatesTags: ["SingleCampus"]
+      }),
+      //UPDATE STUDENT
+      updateStudent: builder.mutation({
+        query: function query(payload) {
+          return {
+            url: "/student/".concat(payload.id),
+            method: "PUT",
+            body: payload.data
+          };
+        },
+        invalidatesTags: ["SingleStudent"]
+      }),
+      //DELETE CAMPUS
+      deleteCampus: builder.mutation({
+        query: function query(id) {
+          return {
+            url: "/campus/".concat(id),
+            method: "DELETE",
+            credentials: "include"
+          };
+        },
+        invalidatesTags: ["Campus"]
+      }),
+      //DELETE STUDENT
+      deleteStudent: builder.mutation({
+        query: function query(id) {
+          return {
+            url: "/student/".concat(id),
+            method: "DELETE",
+            credentials: "include"
+          };
+        },
+        invalidatesTags: ["Students"]
+      })
+    };
   }
 });
-var fetchCampusActions = fetchCampusSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchCampusSlice);
+var useGetCampusQuery = apiSlice.useGetCampusQuery,
+    useGetStudentQuery = apiSlice.useGetStudentQuery,
+    useGetSingleCampusQuery = apiSlice.useGetSingleCampusQuery,
+    useGetSingleStudentQuery = apiSlice.useGetSingleStudentQuery,
+    useAddCampusMutation = apiSlice.useAddCampusMutation,
+    useAddStudentMutation = apiSlice.useAddStudentMutation,
+    useUpdateCampusMutation = apiSlice.useUpdateCampusMutation,
+    useUpdateStudentMutation = apiSlice.useUpdateStudentMutation,
+    useDeleteCampusMutation = apiSlice.useDeleteCampusMutation,
+    useDeleteStudentMutation = apiSlice.useDeleteStudentMutation;
 
-/***/ }),
-
-/***/ "./src/redux/reducers/create-campus.js":
-/*!*********************************************!*\
-  !*** ./src/redux/reducers/create-campus.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createCampusActions": () => (/* binding */ createCampusActions),
-/* harmony export */   "createCampusThunk": () => (/* binding */ createCampusThunk),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var createCampus = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(formData) {
-    var createdCampus;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            console.log("in fetch", formData);
-            _context.next = 4;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/campus", {
-              data: formData
-            });
-
-          case 4:
-            createdCampus = _context.sent;
-            return _context.abrupt("return", createdCampus.json());
-
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 11:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 8]]);
-  }));
-
-  return function createCampus(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var createCampusThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("campus/createCampus", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(formData) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            console.log("in thunk", formData);
-            _context2.next = 3;
-            return createCampus(formData);
-
-          case 3:
-            data = _context2.sent;
-            return _context2.abrupt("return", data.data);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var createCampusSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "createCampus",
-  initialState: {
-    campus: [],
-    status: "idle"
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(createCampusThunk.fulfilled, function (state, action) {
-      state.campus.push(action.payload);
-    });
-  }
-});
-var createCampusActions = createCampusSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createCampusSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/create-student.js":
-/*!**********************************************!*\
-  !*** ./src/redux/reducers/create-student.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createStudentActions": () => (/* binding */ createStudentActions),
-/* harmony export */   "createStudentThunk": () => (/* binding */ createStudentThunk),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var createStudent = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(formData) {
-    var createdStudent;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            console.log("in fetch", formData);
-            _context.next = 4;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/student", {
-              data: formData
-            });
-
-          case 4:
-            createdStudent = _context.sent;
-            return _context.abrupt("return", createdStudent.json());
-
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 11:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 8]]);
-  }));
-
-  return function createStudent(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var createStudentThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("student/createStudent", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(formData) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            console.log("in thunk", formData);
-            _context2.next = 3;
-            return createStudent(formData);
-
-          case 3:
-            data = _context2.sent;
-            return _context2.abrupt("return", data.data);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var createStudentSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "createStudent",
-  initialState: {
-    student: [],
-    status: "idle"
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(createStudentThunk.fulfilled, function (state, action) {
-      state.student.push(action.payload);
-    });
-  }
-});
-var createStudentActions = createStudentSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createStudentSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/delete-campus.js":
-/*!*********************************************!*\
-  !*** ./src/redux/reducers/delete-campus.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "deleteCampusActions": () => (/* binding */ deleteCampusActions),
-/* harmony export */   "deleteCampusThunk": () => (/* binding */ deleteCampusThunk)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var deleteCampus = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/api/campus/".concat(id));
-
-          case 2:
-            data = _context.sent;
-            return _context.abrupt("return", data);
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function deleteCampus(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var deleteCampusThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("campus/deleteCampus", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.next = 2;
-            return deleteCampus(id);
-
-          case 2:
-            data = _context2.sent;
-            console.log("thunk", data);
-            return _context2.abrupt("return", data);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var deleteCampusSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "deleteCampus",
-  initialState: {
-    campus: []
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(deleteCampusThunk.fulfilled, function (state, _ref3) {
-      var payload = _ref3.payload;
-      state.campus = state.campus.splice(state.campus.findIndex(function (school) {
-        return school.id === payload;
-      }), 1);
-    });
-  }
-});
-var deleteCampusActions = deleteCampusSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (deleteCampusSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/delete-student.js":
-/*!**********************************************!*\
-  !*** ./src/redux/reducers/delete-student.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "deleteStudentActions": () => (/* binding */ deleteStudentActions),
-/* harmony export */   "deleteStudentThunk": () => (/* binding */ deleteStudentThunk)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var deleteStudent = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/api/Student/".concat(id));
-
-          case 2:
-            data = _context.sent;
-            return _context.abrupt("return", data);
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function deleteStudent(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var deleteStudentThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("student/deleteStudent", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.next = 2;
-            return deleteStudent(id);
-
-          case 2:
-            data = _context2.sent;
-            console.log("thunk", data);
-            return _context2.abrupt("return", data);
-
-          case 5:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var deleteStudentSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "deleteStudent",
-  initialState: {
-    students: {}
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(deleteStudentThunk.fulfilled, function (state, action) {
-      state.students.splice(state.students.findIndex(function (kid) {
-        return kid.id === action.payload;
-      }), 1);
-    });
-  }
-});
-var deleteStudentActions = deleteStudentSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (deleteStudentSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/singleCampus-slice.js":
-/*!**************************************************!*\
-  !*** ./src/redux/reducers/singleCampus-slice.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "fetchSingleCampusActions": () => (/* binding */ fetchSingleCampusActions),
-/* harmony export */   "fetchSingleCampusThunk": () => (/* binding */ fetchSingleCampusThunk)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var fetchSingleCampus = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
-    var response;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/campus/".concat(id));
-
-          case 3:
-            response = _context.sent;
-            return _context.abrupt("return", response);
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 10:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
-
-  return function fetchSingleCampus(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fetchSingleCampusThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("singleCampus/fetchSingleCampus", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.next = 2;
-            return fetchSingleCampus(id);
-
-          case 2:
-            data = _context2.sent;
-            return _context2.abrupt("return", data.data);
-
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var fetchSingleCampusSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "fetchSingleCampus",
-  initialState: {
-    singleCampus: {}
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(fetchSingleCampusThunk.fulfilled, function (state, action) {
-      state.singleCampus = action.payload;
-    });
-  }
-});
-var fetchSingleCampusActions = fetchSingleCampusSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchSingleCampusSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/singleStudent-slice.js":
-/*!***************************************************!*\
-  !*** ./src/redux/reducers/singleStudent-slice.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "fetchSingleStudentActions": () => (/* binding */ fetchSingleStudentActions),
-/* harmony export */   "fetchSingleStudentThunk": () => (/* binding */ fetchSingleStudentThunk)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var fetchSingleStudent = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(id) {
-    var response;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            _context.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/student/".concat(id));
-
-          case 3:
-            response = _context.sent;
-            return _context.abrupt("return", response);
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 10:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
-
-  return function fetchSingleStudent(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fetchSingleStudentThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("singleStudent/fetchSingleStudent", /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id) {
-    var data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.next = 2;
-            return fetchSingleStudent(id);
-
-          case 2:
-            data = _context2.sent;
-            return _context2.abrupt("return", data.data);
-
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}());
-var fetchSingleStudentSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "fetchSingleStudent",
-  initialState: {
-    singleStudent: {}
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(fetchSingleStudentThunk.fulfilled, function (state, action) {
-      state.singleStudent = action.payload;
-    });
-  }
-});
-var fetchSingleStudentActions = fetchSingleStudentSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchSingleStudentSlice);
-
-/***/ }),
-
-/***/ "./src/redux/reducers/students-slice.js":
-/*!**********************************************!*\
-  !*** ./src/redux/reducers/students-slice.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "fetchStudentsActions": () => (/* binding */ fetchStudentsActions),
-/* harmony export */   "fetchStudentsThunk": () => (/* binding */ fetchStudentsThunk)
-/* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-
-
-var fetchStudents = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var response;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            response = axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/student");
-            return _context.abrupt("return", response);
-
-          case 5:
-            _context.prev = 5;
-            _context.t0 = _context["catch"](0);
-            throw new Error(_context.t0);
-
-          case 8:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 5]]);
-  }));
-
-  return function fetchStudents() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var fetchStudentsThunk = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("students/fetchStudents", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-  var data;
-  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return fetchStudents();
-
-        case 2:
-          data = _context2.sent;
-          return _context2.abrupt("return", data.data);
-
-        case 4:
-        case "end":
-          return _context2.stop();
-      }
-    }
-  }, _callee2);
-})));
-var fetchStudentsSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: "fetchStudents",
-  initialState: {
-    students: {}
-  },
-  reducers: {},
-  extraReducers: function extraReducers(builder) {
-    builder.addCase(fetchStudentsThunk.fulfilled, function (state, action) {
-      state.students = action.payload;
-    });
-  }
-});
-var fetchStudentsActions = fetchStudentsSlice.actions;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchStudentsSlice);
 
 /***/ }),
 
@@ -5693,55 +5584,23 @@ var fetchStudentsActions = fetchStudentsSlice.actions;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "persistor": () => (/* binding */ persistor),
 /* harmony export */   "store": () => (/* binding */ store)
 /* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
-/* harmony import */ var _reducers_campus_slice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../reducers/campus-slice */ "./src/redux/reducers/campus-slice.js");
-/* harmony import */ var _reducers_singleCampus_slice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../reducers/singleCampus-slice */ "./src/redux/reducers/singleCampus-slice.js");
-/* harmony import */ var _reducers_singleStudent_slice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reducers/singleStudent-slice */ "./src/redux/reducers/singleStudent-slice.js");
-/* harmony import */ var _reducers_students_slice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducers/students-slice */ "./src/redux/reducers/students-slice.js");
-/* harmony import */ var _reducers_create_campus__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducers/create-campus */ "./src/redux/reducers/create-campus.js");
-/* harmony import */ var redux_persist_lib_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! redux-persist/lib/storage */ "./node_modules/redux-persist/lib/storage/index.js");
-/* harmony import */ var redux_persist__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! redux-persist */ "./node_modules/redux-persist/es/index.js");
-/* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
-/* harmony import */ var _reducers_delete_campus__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../reducers/delete-campus */ "./src/redux/reducers/delete-campus.js");
-/* harmony import */ var _reducers_delete_student__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reducers/delete-student */ "./src/redux/reducers/delete-student.js");
-/* harmony import */ var _reducers_create_student__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../reducers/create-student */ "./src/redux/reducers/create-student.js");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
+/* harmony import */ var _reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @reduxjs/toolkit/query */ "./node_modules/@reduxjs/toolkit/dist/query/rtk-query.esm.js");
+/* harmony import */ var _api_apiSlice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/apiSlice */ "./src/redux/api/apiSlice.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
-
-
-
-
-
-
-
-
-var persistConfig = {
-  key: "root",
-  storage: redux_persist_lib_storage__WEBPACK_IMPORTED_MODULE_5__["default"]
-};
-var persistedStudents = (0,redux_persist__WEBPACK_IMPORTED_MODULE_6__.persistReducer)(persistConfig, _reducers_students_slice__WEBPACK_IMPORTED_MODULE_3__["default"].reducer);
-var persistedCampus = (0,redux_persist__WEBPACK_IMPORTED_MODULE_6__.persistReducer)(persistConfig, _reducers_campus_slice__WEBPACK_IMPORTED_MODULE_0__["default"].reducer);
-var persistedSingleCampus = (0,redux_persist__WEBPACK_IMPORTED_MODULE_6__.persistReducer)(persistConfig, _reducers_singleCampus_slice__WEBPACK_IMPORTED_MODULE_1__["default"].reducer);
-var persistedSingleStudent = (0,redux_persist__WEBPACK_IMPORTED_MODULE_6__.persistReducer)(persistConfig, _reducers_singleStudent_slice__WEBPACK_IMPORTED_MODULE_2__["default"].reducer);
-var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_10__.configureStore)({
-  reducer: {
-    persistedStudents: persistedStudents,
-    persistedCampus: persistedCampus,
-    persistedSingleCampus: persistedSingleCampus,
-    persistedSingleStudent: persistedSingleStudent,
-    createCampusSlice: _reducers_create_campus__WEBPACK_IMPORTED_MODULE_4__["default"].reducer,
-    createStudentSlice: _reducers_create_student__WEBPACK_IMPORTED_MODULE_9__["default"].reducer,
-    deleteCampusSlice: _reducers_delete_campus__WEBPACK_IMPORTED_MODULE_7__["default"].reducer,
-    deleteStudentSlice: _reducers_delete_student__WEBPACK_IMPORTED_MODULE_8__["default"].reducer
-  },
-  middleware: [redux_thunk__WEBPACK_IMPORTED_MODULE_11__["default"]]
+var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.configureStore)({
+  reducer: _defineProperty({}, _api_apiSlice__WEBPACK_IMPORTED_MODULE_0__.apiSlice.reducerPath, _api_apiSlice__WEBPACK_IMPORTED_MODULE_0__.apiSlice.reducer),
+  middleware: function middleware(getDefaultMiddleware) {
+    return getDefaultMiddleware().concat(_api_apiSlice__WEBPACK_IMPORTED_MODULE_0__.apiSlice.middleware);
+  }
 });
-var persistor = (0,redux_persist__WEBPACK_IMPORTED_MODULE_6__.persistStore)(store);
+(0,_reduxjs_toolkit_query__WEBPACK_IMPORTED_MODULE_2__.setupListeners)(store.dispatch);
 
 /***/ }),
 
@@ -42868,1089 +42727,6 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/redux-persist/es/constants.js":
-/*!****************************************************!*\
-  !*** ./node_modules/redux-persist/es/constants.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DEFAULT_VERSION": () => (/* binding */ DEFAULT_VERSION),
-/* harmony export */   "FLUSH": () => (/* binding */ FLUSH),
-/* harmony export */   "KEY_PREFIX": () => (/* binding */ KEY_PREFIX),
-/* harmony export */   "PAUSE": () => (/* binding */ PAUSE),
-/* harmony export */   "PERSIST": () => (/* binding */ PERSIST),
-/* harmony export */   "PURGE": () => (/* binding */ PURGE),
-/* harmony export */   "REGISTER": () => (/* binding */ REGISTER),
-/* harmony export */   "REHYDRATE": () => (/* binding */ REHYDRATE)
-/* harmony export */ });
-var KEY_PREFIX = 'persist:';
-var FLUSH = 'persist/FLUSH';
-var REHYDRATE = 'persist/REHYDRATE';
-var PAUSE = 'persist/PAUSE';
-var PERSIST = 'persist/PERSIST';
-var PURGE = 'persist/PURGE';
-var REGISTER = 'persist/REGISTER';
-var DEFAULT_VERSION = -1;
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/createMigrate.js":
-/*!********************************************************!*\
-  !*** ./node_modules/redux-persist/es/createMigrate.js ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createMigrate)
-/* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-
-function createMigrate(migrations, config) {
-  var _ref = config || {},
-      debug = _ref.debug;
-
-  return function (state, currentVersion) {
-    if (!state) {
-      if ( true && debug) console.log('redux-persist: no inbound state, skipping migration');
-      return Promise.resolve(undefined);
-    }
-
-    var inboundVersion = state._persist && state._persist.version !== undefined ? state._persist.version : _constants__WEBPACK_IMPORTED_MODULE_0__.DEFAULT_VERSION;
-
-    if (inboundVersion === currentVersion) {
-      if ( true && debug) console.log('redux-persist: versions match, noop migration');
-      return Promise.resolve(state);
-    }
-
-    if (inboundVersion > currentVersion) {
-      if (true) console.error('redux-persist: downgrading version is not supported');
-      return Promise.resolve(state);
-    }
-
-    var migrationKeys = Object.keys(migrations).map(function (ver) {
-      return parseInt(ver);
-    }).filter(function (key) {
-      return currentVersion >= key && key > inboundVersion;
-    }).sort(function (a, b) {
-      return a - b;
-    });
-    if ( true && debug) console.log('redux-persist: migrationKeys', migrationKeys);
-
-    try {
-      var migratedState = migrationKeys.reduce(function (state, versionKey) {
-        if ( true && debug) console.log('redux-persist: running migration for versionKey', versionKey);
-        return migrations[versionKey](state);
-      }, state);
-      return Promise.resolve(migratedState);
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  };
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/createPersistoid.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/redux-persist/es/createPersistoid.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createPersistoid)
-/* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-
-// @TODO remove once flow < 0.63 support is no longer required.
-function createPersistoid(config) {
-  // defaults
-  var blacklist = config.blacklist || null;
-  var whitelist = config.whitelist || null;
-  var transforms = config.transforms || [];
-  var throttle = config.throttle || 0;
-  var storageKey = "".concat(config.keyPrefix !== undefined ? config.keyPrefix : _constants__WEBPACK_IMPORTED_MODULE_0__.KEY_PREFIX).concat(config.key);
-  var storage = config.storage;
-  var serialize;
-
-  if (config.serialize === false) {
-    serialize = function serialize(x) {
-      return x;
-    };
-  } else if (typeof config.serialize === 'function') {
-    serialize = config.serialize;
-  } else {
-    serialize = defaultSerialize;
-  }
-
-  var writeFailHandler = config.writeFailHandler || null; // initialize stateful values
-
-  var lastState = {};
-  var stagedState = {};
-  var keysToProcess = [];
-  var timeIterator = null;
-  var writePromise = null;
-
-  var update = function update(state) {
-    // add any changed keys to the queue
-    Object.keys(state).forEach(function (key) {
-      if (!passWhitelistBlacklist(key)) return; // is keyspace ignored? noop
-
-      if (lastState[key] === state[key]) return; // value unchanged? noop
-
-      if (keysToProcess.indexOf(key) !== -1) return; // is key already queued? noop
-
-      keysToProcess.push(key); // add key to queue
-    }); //if any key is missing in the new state which was present in the lastState,
-    //add it for processing too
-
-    Object.keys(lastState).forEach(function (key) {
-      if (state[key] === undefined && passWhitelistBlacklist(key) && keysToProcess.indexOf(key) === -1 && lastState[key] !== undefined) {
-        keysToProcess.push(key);
-      }
-    }); // start the time iterator if not running (read: throttle)
-
-    if (timeIterator === null) {
-      timeIterator = setInterval(processNextKey, throttle);
-    }
-
-    lastState = state;
-  };
-
-  function processNextKey() {
-    if (keysToProcess.length === 0) {
-      if (timeIterator) clearInterval(timeIterator);
-      timeIterator = null;
-      return;
-    }
-
-    var key = keysToProcess.shift();
-    var endState = transforms.reduce(function (subState, transformer) {
-      return transformer.in(subState, key, lastState);
-    }, lastState[key]);
-
-    if (endState !== undefined) {
-      try {
-        stagedState[key] = serialize(endState);
-      } catch (err) {
-        console.error('redux-persist/createPersistoid: error serializing state', err);
-      }
-    } else {
-      //if the endState is undefined, no need to persist the existing serialized content
-      delete stagedState[key];
-    }
-
-    if (keysToProcess.length === 0) {
-      writeStagedState();
-    }
-  }
-
-  function writeStagedState() {
-    // cleanup any removed keys just before write.
-    Object.keys(stagedState).forEach(function (key) {
-      if (lastState[key] === undefined) {
-        delete stagedState[key];
-      }
-    });
-    writePromise = storage.setItem(storageKey, serialize(stagedState)).catch(onWriteFail);
-  }
-
-  function passWhitelistBlacklist(key) {
-    if (whitelist && whitelist.indexOf(key) === -1 && key !== '_persist') return false;
-    if (blacklist && blacklist.indexOf(key) !== -1) return false;
-    return true;
-  }
-
-  function onWriteFail(err) {
-    // @TODO add fail handlers (typically storage full)
-    if (writeFailHandler) writeFailHandler(err);
-
-    if (err && "development" !== 'production') {
-      console.error('Error storing data', err);
-    }
-  }
-
-  var flush = function flush() {
-    while (keysToProcess.length !== 0) {
-      processNextKey();
-    }
-
-    return writePromise || Promise.resolve();
-  }; // return `persistoid`
-
-
-  return {
-    update: update,
-    flush: flush
-  };
-} // @NOTE in the future this may be exposed via config
-
-function defaultSerialize(data) {
-  return JSON.stringify(data);
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/createTransform.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/redux-persist/es/createTransform.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createTransform)
-/* harmony export */ });
-function createTransform( // @NOTE inbound: transform state coming from redux on its way to being serialized and stored
-inbound, // @NOTE outbound: transform state coming from storage, on its way to be rehydrated into redux
-outbound) {
-  var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var whitelist = config.whitelist || null;
-  var blacklist = config.blacklist || null;
-
-  function whitelistBlacklistCheck(key) {
-    if (whitelist && whitelist.indexOf(key) === -1) return true;
-    if (blacklist && blacklist.indexOf(key) !== -1) return true;
-    return false;
-  }
-
-  return {
-    in: function _in(state, key, fullState) {
-      return !whitelistBlacklistCheck(key) && inbound ? inbound(state, key, fullState) : state;
-    },
-    out: function out(state, key, fullState) {
-      return !whitelistBlacklistCheck(key) && outbound ? outbound(state, key, fullState) : state;
-    }
-  };
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/getStoredState.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/redux-persist/es/getStoredState.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ getStoredState)
-/* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-
-function getStoredState(config) {
-  var transforms = config.transforms || [];
-  var storageKey = "".concat(config.keyPrefix !== undefined ? config.keyPrefix : _constants__WEBPACK_IMPORTED_MODULE_0__.KEY_PREFIX).concat(config.key);
-  var storage = config.storage;
-  var debug = config.debug;
-  var deserialize;
-
-  if (config.deserialize === false) {
-    deserialize = function deserialize(x) {
-      return x;
-    };
-  } else if (typeof config.deserialize === 'function') {
-    deserialize = config.deserialize;
-  } else {
-    deserialize = defaultDeserialize;
-  }
-
-  return storage.getItem(storageKey).then(function (serialized) {
-    if (!serialized) return undefined;else {
-      try {
-        var state = {};
-        var rawState = deserialize(serialized);
-        Object.keys(rawState).forEach(function (key) {
-          state[key] = transforms.reduceRight(function (subState, transformer) {
-            return transformer.out(subState, key, rawState);
-          }, deserialize(rawState[key]));
-        });
-        return state;
-      } catch (err) {
-        if ( true && debug) console.log("redux-persist/getStoredState: Error restoring data ".concat(serialized), err);
-        throw err;
-      }
-    }
-  });
-}
-
-function defaultDeserialize(serial) {
-  return JSON.parse(serial);
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/index.js":
-/*!************************************************!*\
-  !*** ./node_modules/redux-persist/es/index.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DEFAULT_VERSION": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.DEFAULT_VERSION),
-/* harmony export */   "FLUSH": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.FLUSH),
-/* harmony export */   "KEY_PREFIX": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.KEY_PREFIX),
-/* harmony export */   "PAUSE": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.PAUSE),
-/* harmony export */   "PERSIST": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.PERSIST),
-/* harmony export */   "PURGE": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.PURGE),
-/* harmony export */   "REGISTER": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.REGISTER),
-/* harmony export */   "REHYDRATE": () => (/* reexport safe */ _constants__WEBPACK_IMPORTED_MODULE_8__.REHYDRATE),
-/* harmony export */   "createMigrate": () => (/* reexport safe */ _createMigrate__WEBPACK_IMPORTED_MODULE_3__["default"]),
-/* harmony export */   "createPersistoid": () => (/* reexport safe */ _createPersistoid__WEBPACK_IMPORTED_MODULE_6__["default"]),
-/* harmony export */   "createTransform": () => (/* reexport safe */ _createTransform__WEBPACK_IMPORTED_MODULE_4__["default"]),
-/* harmony export */   "getStoredState": () => (/* reexport safe */ _getStoredState__WEBPACK_IMPORTED_MODULE_5__["default"]),
-/* harmony export */   "persistCombineReducers": () => (/* reexport safe */ _persistCombineReducers__WEBPACK_IMPORTED_MODULE_1__["default"]),
-/* harmony export */   "persistReducer": () => (/* reexport safe */ _persistReducer__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   "persistStore": () => (/* reexport safe */ _persistStore__WEBPACK_IMPORTED_MODULE_2__["default"]),
-/* harmony export */   "purgeStoredState": () => (/* reexport safe */ _purgeStoredState__WEBPACK_IMPORTED_MODULE_7__["default"])
-/* harmony export */ });
-/* harmony import */ var _persistReducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./persistReducer */ "./node_modules/redux-persist/es/persistReducer.js");
-/* harmony import */ var _persistCombineReducers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./persistCombineReducers */ "./node_modules/redux-persist/es/persistCombineReducers.js");
-/* harmony import */ var _persistStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./persistStore */ "./node_modules/redux-persist/es/persistStore.js");
-/* harmony import */ var _createMigrate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createMigrate */ "./node_modules/redux-persist/es/createMigrate.js");
-/* harmony import */ var _createTransform__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createTransform */ "./node_modules/redux-persist/es/createTransform.js");
-/* harmony import */ var _getStoredState__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getStoredState */ "./node_modules/redux-persist/es/getStoredState.js");
-/* harmony import */ var _createPersistoid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./createPersistoid */ "./node_modules/redux-persist/es/createPersistoid.js");
-/* harmony import */ var _purgeStoredState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./purgeStoredState */ "./node_modules/redux-persist/es/purgeStoredState.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-
-
-
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/integration/react.js":
-/*!************************************************************!*\
-  !*** ./node_modules/redux-persist/es/integration/react.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PersistGate": () => (/* binding */ PersistGate)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
- // eslint-disable-line import/no-unresolved
-
-var PersistGate =
-/*#__PURE__*/
-function (_PureComponent) {
-  _inherits(PersistGate, _PureComponent);
-
-  function PersistGate() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    _classCallCheck(this, PersistGate);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(PersistGate)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-    _defineProperty(_assertThisInitialized(_this), "state", {
-      bootstrapped: false
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "_unsubscribe", void 0);
-
-    _defineProperty(_assertThisInitialized(_this), "handlePersistorState", function () {
-      var persistor = _this.props.persistor;
-
-      var _persistor$getState = persistor.getState(),
-          bootstrapped = _persistor$getState.bootstrapped;
-
-      if (bootstrapped) {
-        if (_this.props.onBeforeLift) {
-          Promise.resolve(_this.props.onBeforeLift()).finally(function () {
-            return _this.setState({
-              bootstrapped: true
-            });
-          });
-        } else {
-          _this.setState({
-            bootstrapped: true
-          });
-        }
-
-        _this._unsubscribe && _this._unsubscribe();
-      }
-    });
-
-    return _this;
-  }
-
-  _createClass(PersistGate, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this._unsubscribe = this.props.persistor.subscribe(this.handlePersistorState);
-      this.handlePersistorState();
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this._unsubscribe && this._unsubscribe();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      if (true) {
-        if (typeof this.props.children === 'function' && this.props.loading) console.error('redux-persist: PersistGate expects either a function child or loading prop, but not both. The loading prop will be ignored.');
-      }
-
-      if (typeof this.props.children === 'function') {
-        return this.props.children(this.state.bootstrapped);
-      }
-
-      return this.state.bootstrapped ? this.props.children : this.props.loading;
-    }
-  }]);
-
-  return PersistGate;
-}(react__WEBPACK_IMPORTED_MODULE_0__.PureComponent);
-
-_defineProperty(PersistGate, "defaultProps", {
-  children: null,
-  loading: null
-});
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/persistCombineReducers.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/redux-persist/es/persistCombineReducers.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ persistCombineReducers)
-/* harmony export */ });
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _persistReducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./persistReducer */ "./node_modules/redux-persist/es/persistReducer.js");
-/* harmony import */ var _stateReconciler_autoMergeLevel2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stateReconciler/autoMergeLevel2 */ "./node_modules/redux-persist/es/stateReconciler/autoMergeLevel2.js");
-
-
-
-// combineReducers + persistReducer with stateReconciler defaulted to autoMergeLevel2
-function persistCombineReducers(config, reducers) {
-  config.stateReconciler = config.stateReconciler === undefined ? _stateReconciler_autoMergeLevel2__WEBPACK_IMPORTED_MODULE_1__["default"] : config.stateReconciler;
-  return (0,_persistReducer__WEBPACK_IMPORTED_MODULE_0__["default"])(config, (0,redux__WEBPACK_IMPORTED_MODULE_2__.combineReducers)(reducers));
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/persistReducer.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/redux-persist/es/persistReducer.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ persistReducer)
-/* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-/* harmony import */ var _stateReconciler_autoMergeLevel1__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stateReconciler/autoMergeLevel1 */ "./node_modules/redux-persist/es/stateReconciler/autoMergeLevel1.js");
-/* harmony import */ var _createPersistoid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createPersistoid */ "./node_modules/redux-persist/es/createPersistoid.js");
-/* harmony import */ var _getStoredState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getStoredState */ "./node_modules/redux-persist/es/getStoredState.js");
-/* harmony import */ var _purgeStoredState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./purgeStoredState */ "./node_modules/redux-persist/es/purgeStoredState.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-
-
-
-
-
-var DEFAULT_TIMEOUT = 5000;
-/*
-  @TODO add validation / handling for:
-  - persisting a reducer which has nested _persist
-  - handling actions that fire before reydrate is called
-*/
-
-function persistReducer(config, baseReducer) {
-  if (true) {
-    if (!config) throw new Error('config is required for persistReducer');
-    if (!config.key) throw new Error('key is required in persistor config');
-    if (!config.storage) throw new Error("redux-persist: config.storage is required. Try using one of the provided storage engines `import storage from 'redux-persist/lib/storage'`");
-  }
-
-  var version = config.version !== undefined ? config.version : _constants__WEBPACK_IMPORTED_MODULE_0__.DEFAULT_VERSION;
-  var debug = config.debug || false;
-  var stateReconciler = config.stateReconciler === undefined ? _stateReconciler_autoMergeLevel1__WEBPACK_IMPORTED_MODULE_1__["default"] : config.stateReconciler;
-  var getStoredState = config.getStoredState || _getStoredState__WEBPACK_IMPORTED_MODULE_3__["default"];
-  var timeout = config.timeout !== undefined ? config.timeout : DEFAULT_TIMEOUT;
-  var _persistoid = null;
-  var _purge = false;
-  var _paused = true;
-
-  var conditionalUpdate = function conditionalUpdate(state) {
-    // update the persistoid only if we are rehydrated and not paused
-    state._persist.rehydrated && _persistoid && !_paused && _persistoid.update(state);
-    return state;
-  };
-
-  return function (state, action) {
-    var _ref = state || {},
-        _persist = _ref._persist,
-        rest = _objectWithoutProperties(_ref, ["_persist"]); // $FlowIgnore need to update State type
-
-
-    var restState = rest;
-
-    if (action.type === _constants__WEBPACK_IMPORTED_MODULE_0__.PERSIST) {
-      var _sealed = false;
-
-      var _rehydrate = function _rehydrate(payload, err) {
-        // dev warning if we are already sealed
-        if ( true && _sealed) console.error("redux-persist: rehydrate for \"".concat(config.key, "\" called after timeout."), payload, err); // only rehydrate if we are not already sealed
-
-        if (!_sealed) {
-          action.rehydrate(config.key, payload, err);
-          _sealed = true;
-        }
-      };
-
-      timeout && setTimeout(function () {
-        !_sealed && _rehydrate(undefined, new Error("redux-persist: persist timed out for persist key \"".concat(config.key, "\"")));
-      }, timeout); // @NOTE PERSIST resumes if paused.
-
-      _paused = false; // @NOTE only ever create persistoid once, ensure we call it at least once, even if _persist has already been set
-
-      if (!_persistoid) _persistoid = (0,_createPersistoid__WEBPACK_IMPORTED_MODULE_2__["default"])(config); // @NOTE PERSIST can be called multiple times, noop after the first
-
-      if (_persist) {
-        // We still need to call the base reducer because there might be nested
-        // uses of persistReducer which need to be aware of the PERSIST action
-        return _objectSpread({}, baseReducer(restState, action), {
-          _persist: _persist
-        });
-      }
-
-      if (typeof action.rehydrate !== 'function' || typeof action.register !== 'function') throw new Error('redux-persist: either rehydrate or register is not a function on the PERSIST action. This can happen if the action is being replayed. This is an unexplored use case, please open an issue and we will figure out a resolution.');
-      action.register(config.key);
-      getStoredState(config).then(function (restoredState) {
-        var migrate = config.migrate || function (s, v) {
-          return Promise.resolve(s);
-        };
-
-        migrate(restoredState, version).then(function (migratedState) {
-          _rehydrate(migratedState);
-        }, function (migrateErr) {
-          if ( true && migrateErr) console.error('redux-persist: migration error', migrateErr);
-
-          _rehydrate(undefined, migrateErr);
-        });
-      }, function (err) {
-        _rehydrate(undefined, err);
-      });
-      return _objectSpread({}, baseReducer(restState, action), {
-        _persist: {
-          version: version,
-          rehydrated: false
-        }
-      });
-    } else if (action.type === _constants__WEBPACK_IMPORTED_MODULE_0__.PURGE) {
-      _purge = true;
-      action.result((0,_purgeStoredState__WEBPACK_IMPORTED_MODULE_4__["default"])(config));
-      return _objectSpread({}, baseReducer(restState, action), {
-        _persist: _persist
-      });
-    } else if (action.type === _constants__WEBPACK_IMPORTED_MODULE_0__.FLUSH) {
-      action.result(_persistoid && _persistoid.flush());
-      return _objectSpread({}, baseReducer(restState, action), {
-        _persist: _persist
-      });
-    } else if (action.type === _constants__WEBPACK_IMPORTED_MODULE_0__.PAUSE) {
-      _paused = true;
-    } else if (action.type === _constants__WEBPACK_IMPORTED_MODULE_0__.REHYDRATE) {
-      // noop on restState if purging
-      if (_purge) return _objectSpread({}, restState, {
-        _persist: _objectSpread({}, _persist, {
-          rehydrated: true
-        }) // @NOTE if key does not match, will continue to default else below
-
-      });
-
-      if (action.key === config.key) {
-        var reducedState = baseReducer(restState, action);
-        var inboundState = action.payload; // only reconcile state if stateReconciler and inboundState are both defined
-
-        var reconciledRest = stateReconciler !== false && inboundState !== undefined ? stateReconciler(inboundState, state, reducedState, config) : reducedState;
-
-        var _newState = _objectSpread({}, reconciledRest, {
-          _persist: _objectSpread({}, _persist, {
-            rehydrated: true
-          })
-        });
-
-        return conditionalUpdate(_newState);
-      }
-    } // if we have not already handled PERSIST, straight passthrough
-
-
-    if (!_persist) return baseReducer(state, action); // run base reducer:
-    // is state modified ? return original : return updated
-
-    var newState = baseReducer(restState, action);
-    if (newState === restState) return state;
-    return conditionalUpdate(_objectSpread({}, newState, {
-      _persist: _persist
-    }));
-  };
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/persistStore.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/redux-persist/es/persistStore.js ***!
-  \*******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ persistStore)
-/* harmony export */ });
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-var initialState = {
-  registry: [],
-  bootstrapped: false
-};
-
-var persistorReducer = function persistorReducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-  var action = arguments.length > 1 ? arguments[1] : undefined;
-
-  switch (action.type) {
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER:
-      return _objectSpread({}, state, {
-        registry: [].concat(_toConsumableArray(state.registry), [action.key])
-      });
-
-    case _constants__WEBPACK_IMPORTED_MODULE_0__.REHYDRATE:
-      var firstIndex = state.registry.indexOf(action.key);
-
-      var registry = _toConsumableArray(state.registry);
-
-      registry.splice(firstIndex, 1);
-      return _objectSpread({}, state, {
-        registry: registry,
-        bootstrapped: registry.length === 0
-      });
-
-    default:
-      return state;
-  }
-};
-
-function persistStore(store, options, cb) {
-  // help catch incorrect usage of passing PersistConfig in as PersistorOptions
-  if (true) {
-    var optionsToTest = options || {};
-    var bannedKeys = ['blacklist', 'whitelist', 'transforms', 'storage', 'keyPrefix', 'migrate'];
-    bannedKeys.forEach(function (k) {
-      if (!!optionsToTest[k]) console.error("redux-persist: invalid option passed to persistStore: \"".concat(k, "\". You may be incorrectly passing persistConfig into persistStore, whereas it should be passed into persistReducer."));
-    });
-  }
-
-  var boostrappedCb = cb || false;
-
-  var _pStore = (0,redux__WEBPACK_IMPORTED_MODULE_1__.createStore)(persistorReducer, initialState, options && options.enhancer ? options.enhancer : undefined);
-
-  var register = function register(key) {
-    _pStore.dispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
-      key: key
-    });
-  };
-
-  var rehydrate = function rehydrate(key, payload, err) {
-    var rehydrateAction = {
-      type: _constants__WEBPACK_IMPORTED_MODULE_0__.REHYDRATE,
-      payload: payload,
-      err: err,
-      key: key // dispatch to `store` to rehydrate and `persistor` to track result
-
-    };
-    store.dispatch(rehydrateAction);
-
-    _pStore.dispatch(rehydrateAction);
-
-    if (boostrappedCb && persistor.getState().bootstrapped) {
-      boostrappedCb();
-      boostrappedCb = false;
-    }
-  };
-
-  var persistor = _objectSpread({}, _pStore, {
-    purge: function purge() {
-      var results = [];
-      store.dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_0__.PURGE,
-        result: function result(purgeResult) {
-          results.push(purgeResult);
-        }
-      });
-      return Promise.all(results);
-    },
-    flush: function flush() {
-      var results = [];
-      store.dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_0__.FLUSH,
-        result: function result(flushResult) {
-          results.push(flushResult);
-        }
-      });
-      return Promise.all(results);
-    },
-    pause: function pause() {
-      store.dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_0__.PAUSE
-      });
-    },
-    persist: function persist() {
-      store.dispatch({
-        type: _constants__WEBPACK_IMPORTED_MODULE_0__.PERSIST,
-        register: register,
-        rehydrate: rehydrate
-      });
-    }
-  });
-
-  if (!(options && options.manualPersist)) {
-    persistor.persist();
-  }
-
-  return persistor;
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/purgeStoredState.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/redux-persist/es/purgeStoredState.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ purgeStoredState)
-/* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./node_modules/redux-persist/es/constants.js");
-
-function purgeStoredState(config) {
-  var storage = config.storage;
-  var storageKey = "".concat(config.keyPrefix !== undefined ? config.keyPrefix : _constants__WEBPACK_IMPORTED_MODULE_0__.KEY_PREFIX).concat(config.key);
-  return storage.removeItem(storageKey, warnIfRemoveError);
-}
-
-function warnIfRemoveError(err) {
-  if (err && "development" !== 'production') {
-    console.error('redux-persist/purgeStoredState: Error purging data stored state', err);
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/stateReconciler/autoMergeLevel1.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/redux-persist/es/stateReconciler/autoMergeLevel1.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ autoMergeLevel1)
-/* harmony export */ });
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-/*
-  autoMergeLevel1: 
-    - merges 1 level of substate
-    - skips substate if already modified
-*/
-function autoMergeLevel1(inboundState, originalState, reducedState, _ref) {
-  var debug = _ref.debug;
-
-  var newState = _objectSpread({}, reducedState); // only rehydrate if inboundState exists and is an object
-
-
-  if (inboundState && _typeof(inboundState) === 'object') {
-    Object.keys(inboundState).forEach(function (key) {
-      // ignore _persist data
-      if (key === '_persist') return; // if reducer modifies substate, skip auto rehydration
-
-      if (originalState[key] !== reducedState[key]) {
-        if ( true && debug) console.log('redux-persist/stateReconciler: sub state for key `%s` modified, skipping.', key);
-        return;
-      } // otherwise hard set the new value
-
-
-      newState[key] = inboundState[key];
-    });
-  }
-
-  if ( true && debug && inboundState && _typeof(inboundState) === 'object') console.log("redux-persist/stateReconciler: rehydrated keys '".concat(Object.keys(inboundState).join(', '), "'"));
-  return newState;
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/es/stateReconciler/autoMergeLevel2.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/redux-persist/es/stateReconciler/autoMergeLevel2.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ autoMergeLevel2)
-/* harmony export */ });
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-/*
-  autoMergeLevel2: 
-    - merges 2 level of substate
-    - skips substate if already modified
-    - this is essentially redux-perist v4 behavior
-*/
-function autoMergeLevel2(inboundState, originalState, reducedState, _ref) {
-  var debug = _ref.debug;
-
-  var newState = _objectSpread({}, reducedState); // only rehydrate if inboundState exists and is an object
-
-
-  if (inboundState && _typeof(inboundState) === 'object') {
-    Object.keys(inboundState).forEach(function (key) {
-      // ignore _persist data
-      if (key === '_persist') return; // if reducer modifies substate, skip auto rehydration
-
-      if (originalState[key] !== reducedState[key]) {
-        if ( true && debug) console.log('redux-persist/stateReconciler: sub state for key `%s` modified, skipping.', key);
-        return;
-      }
-
-      if (isPlainEnoughObject(reducedState[key])) {
-        // if object is plain enough shallow merge the new values (hence "Level2")
-        newState[key] = _objectSpread({}, newState[key], {}, inboundState[key]);
-        return;
-      } // otherwise hard set
-
-
-      newState[key] = inboundState[key];
-    });
-  }
-
-  if ( true && debug && inboundState && _typeof(inboundState) === 'object') console.log("redux-persist/stateReconciler: rehydrated keys '".concat(Object.keys(inboundState).join(', '), "'"));
-  return newState;
-}
-
-function isPlainEnoughObject(o) {
-  return o !== null && !Array.isArray(o) && _typeof(o) === 'object';
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/lib/storage/createWebStorage.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/redux-persist/lib/storage/createWebStorage.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports["default"] = createWebStorage;
-
-var _getStorage = _interopRequireDefault(__webpack_require__(/*! ./getStorage */ "./node_modules/redux-persist/lib/storage/getStorage.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function createWebStorage(type) {
-  var storage = (0, _getStorage.default)(type);
-  return {
-    getItem: function getItem(key) {
-      return new Promise(function (resolve, reject) {
-        resolve(storage.getItem(key));
-      });
-    },
-    setItem: function setItem(key, item) {
-      return new Promise(function (resolve, reject) {
-        resolve(storage.setItem(key, item));
-      });
-    },
-    removeItem: function removeItem(key) {
-      return new Promise(function (resolve, reject) {
-        resolve(storage.removeItem(key));
-      });
-    }
-  };
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/lib/storage/getStorage.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/redux-persist/lib/storage/getStorage.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports["default"] = getStorage;
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function noop() {}
-
-var noopStorage = {
-  getItem: noop,
-  setItem: noop,
-  removeItem: noop
-};
-
-function hasStorage(storageType) {
-  if ((typeof self === "undefined" ? "undefined" : _typeof(self)) !== 'object' || !(storageType in self)) {
-    return false;
-  }
-
-  try {
-    var storage = self[storageType];
-    var testKey = "redux-persist ".concat(storageType, " test");
-    storage.setItem(testKey, 'test');
-    storage.getItem(testKey);
-    storage.removeItem(testKey);
-  } catch (e) {
-    if (true) console.warn("redux-persist ".concat(storageType, " test failed, persistence will be disabled."));
-    return false;
-  }
-
-  return true;
-}
-
-function getStorage(type) {
-  var storageType = "".concat(type, "Storage");
-  if (hasStorage(storageType)) return self[storageType];else {
-    if (true) {
-      console.error("redux-persist failed to create sync storage. falling back to noop storage.");
-    }
-
-    return noopStorage;
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/redux-persist/lib/storage/index.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/redux-persist/lib/storage/index.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports["default"] = void 0;
-
-var _createWebStorage = _interopRequireDefault(__webpack_require__(/*! ./createWebStorage */ "./node_modules/redux-persist/lib/storage/createWebStorage.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _default = (0, _createWebStorage.default)('local');
-
-exports["default"] = _default;
-
-/***/ }),
-
 /***/ "./node_modules/redux-thunk/es/index.js":
 /*!**********************************************!*\
   !*** ./node_modules/redux-thunk/es/index.js ***!
@@ -46352,7 +45128,7 @@ function n(n){for(var r=arguments.length,t=Array(r>1?r-1:0),e=1;e<r;e++)t[e-1]=a
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -46425,9 +45201,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App */ "./src/App.js");
 /* harmony import */ var _redux_store_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./redux/store/index */ "./src/redux/store/index.js");
-/* harmony import */ var redux_persist_integration_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! redux-persist/integration/react */ "./node_modules/redux-persist/es/integration/react.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/* harmony import */ var _reduxjs_toolkit_dist_query_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @reduxjs/toolkit/dist/query/react */ "./node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.cjs.development.js");
+/* harmony import */ var _reduxjs_toolkit_dist_query_react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_reduxjs_toolkit_dist_query_react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./redux/api/apiSlice */ "./src/redux/api/apiSlice.js");
 
 
 
@@ -46436,12 +45213,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var root = react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.getElementById("root"));
-root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_redux__WEBPACK_IMPORTED_MODULE_5__.Provider, {
-  store: _redux_store_index__WEBPACK_IMPORTED_MODULE_3__.store
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(redux_persist_integration_react__WEBPACK_IMPORTED_MODULE_4__.PersistGate, {
-  loading: null,
-  persistor: _redux_store_index__WEBPACK_IMPORTED_MODULE_3__.persistor
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_App__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
+root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_reduxjs_toolkit_dist_query_react__WEBPACK_IMPORTED_MODULE_6__.ApiProvider, {
+  api: _redux_api_apiSlice__WEBPACK_IMPORTED_MODULE_4__.apiSlice
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_App__WEBPACK_IMPORTED_MODULE_2__["default"], null))));
 })();
 
 /******/ })()

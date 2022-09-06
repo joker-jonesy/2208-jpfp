@@ -1,37 +1,60 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchSingleCampusThunk } from "../redux/reducers/singleCampus-slice";
+import {
+  useGetSingleCampusQuery,
+  useUpdateCampusMutation,
+} from "../redux/api/apiSlice";
+import CampusForm from "./CampusForm";
 
 function SingleCampus() {
+  const [edit, setEdit] = useState(false);
   const params = useParams();
-  const dispatch = useDispatch();
 
-  const campus = useSelector(
-    (state) => state.persistedSingleCampus.singleCampus
-  );
+  const { data, error, isLoading, isFetching, isSuccess } =
+    useGetSingleCampusQuery(params.id);
+  const [updateCampus] = useUpdateCampusMutation();
 
-  useEffect(() => {
-    dispatch(fetchSingleCampusThunk(params.id));
-  }, [dispatch]);
+  const handleRemoveStudent = async (e, id) => {
+    e.preventDefault();
+    let payload = {
+      id: params.id,
+      data: "remove",
+      studentId: id,
+    };
+    await updateCampus(payload);
+  };
 
   return (
     <div>
-      YOOOOO
-      <div>{campus.name}</div>
-      <div>{campus.address}</div>
-      <div>{campus.description}</div>
-      <div>image goes here</div>
-      <div>Students</div>
-      {campus.Students &&
-        campus.Students.map((student) => {
-          return (
-            <Link to={`/student/${student.id}`} key={student.id}>
-              {student.firstName}
-              {student.firstLame}
-            </Link>
-          );
-        })}
+      Single Campus Page
+      {isLoading && <h2>Campus is being served</h2>}
+      {isFetching && <h2>Fetching campus, please wait</h2>}
+      {error && <h2>Oops! There was an error Dx</h2>}
+      {isSuccess && (
+        <div>
+          {" "}
+          <div>{data.name}</div>
+          <div>{data.address}</div>
+          <div>{data.description}</div>
+          <div>image goes here</div>
+          <div>Students</div>
+          {data.Students &&
+            data.Students.map((student) => {
+              return (
+                <div key={student.id}>
+                  <Link to={`/student/${student.id}`}>
+                    {student.firstName}
+                    {student.firstLame}
+                  </Link>
+                  <button onClick={(e) => handleRemoveStudent(e, student.id)}>
+                    Unregister Student
+                  </button>
+                </div>
+              );
+            })}
+        </div>
+      )}
+      {!edit && <CampusForm props={edit} />}
     </div>
   );
 }

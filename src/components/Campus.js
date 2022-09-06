@@ -1,28 +1,36 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { deleteCampusThunk } from "../redux/reducers/delete-campus";
+import {
+  useGetCampusQuery,
+  useDeleteCampusMutation,
+} from "../redux/api/apiSlice";
 import CampusForm from "./CampusForm";
 
 function Campus() {
-  const campus = useSelector((state) => state.persistedCampus.campus);
-  const dispatch = useDispatch();
+  const [adding, setAdding] = useState(true);
+  const { data, error, isLoading, isFetching, isSuccess } = useGetCampusQuery();
+  const [deleteCampus] = useDeleteCampusMutation();
+
+  const deleteHandler = async (id) => {
+    await deleteCampus(id);
+  };
 
   return (
     <div>
       Campus Page
-      {campus &&
-        campus.map((campi) => {
+      {isLoading && <h2>Campuses are being served</h2>}
+      {isFetching && <h2>Fetching campuses, please wait</h2>}
+      {error && <h2>Oops! There was an error Dx</h2>}
+      {isSuccess &&
+        data.map((campi) => {
           return (
             <div key={campi.id}>
               <Link to={`/campus/${campi.id}`}>{campi.name}</Link>
-              <button onClick={() => dispatch(deleteCampusThunk(campi.id))}>
-                X
-              </button>
+              <button onClick={() => deleteHandler(campi.id)}>X</button>
             </div>
           );
         })}
-      <CampusForm />
+      {adding && <CampusForm props={adding} />}
     </div>
   );
 }

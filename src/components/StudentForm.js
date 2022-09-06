@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createStudentThunk } from "../redux/reducers/create-student";
+import { useParams } from "react-router-dom";
+import {
+  useAddStudentMutation,
+  useUpdateStudentMutation,
+} from "../redux/api/apiSlice";
 
-function StudentForm() {
+function StudentForm(props) {
+  const [addStudent] = useAddStudentMutation();
+  const [editStudent] = useUpdateStudentMutation();
+  const params = useParams();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -11,16 +18,18 @@ function StudentForm() {
     img: "",
   });
 
-  const dispatch = useDispatch();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createStudentThunk(formData));
+    const payload = {
+      id: params.id,
+      data: formData,
+    };
+    props.props ? await addStudent(formData) : await editStudent(payload);
   };
 
   return (
     <div>
-      StudentForm
+      {props.props ? "Add new Student" : "Edit Student"}
       <form
         onSubmit={(e) => {
           handleSubmit(e);
