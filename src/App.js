@@ -23,11 +23,11 @@ function App() {
       <div>ITS HECKIN PROJECT TIME</div>
       <Nav />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/campus" element={<Campus />} />
         <Route path="/students" element={<Students />} />
         <Route path="/campus/:id" element={<SingleCampus />} />
         <Route path="/student/:id" element={<SingleStudent />} />
-        <Route path="/" element={<Home />} />
       </Routes>
     </>
   );

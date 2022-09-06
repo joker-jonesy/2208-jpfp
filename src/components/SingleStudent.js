@@ -8,7 +8,7 @@ function SingleStudent() {
   const dispatch = useDispatch();
 
   const student = useSelector(
-    (state) => state.fetchSingleStudentSlice.singleStudent
+    (state) => state.persistedSingleStudent.singleStudent
   );
   console.log(student);
 
